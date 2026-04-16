@@ -226,9 +226,10 @@ function openChat(id){
       <div class="h-name">${agent.name}</div>
       <div class="h-status"><span class="dot" style="color:${busy?'#f59e0b':'#4ade80'}">●</span> ${busy?'Working…':'Available — '+agent.role}</div>
     </div>
-    <div class="h-actions">
-      <button class="btn" onclick="clearChat()">Clear chat</button>
-      <button class="btn" onclick="showRoster()">← All agents</button>
+    <div class="h-actions" style="display:flex;align-items:center;gap:8px">
+      ${buildClientSelector()}
+      <button class="btn" onclick="clearChat()">Clear</button>
+      <button class="btn" onclick="showRoster()">← Team</button>
     </div>`;
 
   renderMessages();
@@ -365,7 +366,7 @@ async function send(text){
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
-        system:agent.sys,
+        system:getSystemPrompt(agent),
         messages:chats[activeId]
       })
     });
@@ -392,6 +393,53 @@ document.getElementById('msg-input').addEventListener('input',function(){
 document.getElementById('msg-input').addEventListener('keydown',function(e){
   if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}
 });
+
+// ── FirmOS client sync
+let FIRM_CLIENTS=[];
+function loadFirmData(){
+  try{
+    const cd=localStorage.getItem('firmOS_clients');
+    if(cd){const p=JSON.parse(cd);FIRM_CLIENTS=p.clients||[];}
+  }catch(e){FIRM_CLIENTS=[];}
+}
+function buildFirmContext(){
+  if(!FIRM_CLIENTS.length)return '';
+  const lines=FIRM_CLIENTS.map(c=>`- ${c.name} | Industry: ${c.industry} | Services: ${(c.services||[]).join(', ')} | MRR: $${c.mrr||0} | States: ${(c.states||[]).join(', ')} | Status: ${c.status}`);
+  return `
+
+YOUR FIRM'S CLIENT ROSTER (from Firm OS — use this when the user references a client by name or asks about a client):
+${lines.join('
+')}
+
+When the user mentions a client by name, use the roster above to give context-aware, specific responses about that client's services, location, and business type. If a specific client is selected, focus your responses on that client's context.`;
+}
+function getSystemPrompt(agent){
+  loadFirmData();
+  const clientCtxEl=document.getElementById('client-ctx');
+  const selId=clientCtxEl?clientCtxEl.value:'';
+  const selClient=FIRM_CLIENTS.find(c=>c.id===selId);
+  let extra=buildFirmContext();
+  if(selClient){
+    extra+=`
+
+ACTIVE CLIENT FOR THIS CONVERSATION: ${selClient.name}
+Industry: ${selClient.industry}
+Services: ${(selClient.services||[]).join(', ')}
+States: ${(selClient.states||[]).join(', ')}
+MRR: $${selClient.mrr||0}
+Status: ${selClient.status}
+
+Focus your responses on this client unless the user specifies otherwise.`;
+  }
+  return agent.sys+extra;
+}
+
+// ── Add client selector to header
+function buildClientSelector(){
+  loadFirmData();
+  if(!FIRM_CLIENTS.length)return `<span style="font-size:11px;color:var(--txh);padding:4px 8px">No clients — add in Firm OS</span>`;
+  return `<select id="client-ctx" style="padding:5px 10px;border:1px solid var(--bdr2);border-radius:6px;font-size:12px;font-family:var(--sans);background:var(--sur);color:var(--tx);max-width:170px;cursor:pointer"><option value="">All clients</option>${FIRM_CLIENTS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select>`;
+}
 
 renderRoster();
 renderNav();

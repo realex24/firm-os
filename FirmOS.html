@@ -772,11 +772,22 @@ let S = {
   nxQ:{},
   advChecklist:{}
 };
-try{const saved=localStorage.getItem('firmOS_state');if(saved){const p=JSON.parse(saved);['tasks','onboardProgress','nxStates','nxQ','advChecklist','bmkValues'].forEach(k=>{if(p[k])S[k]=p[k]})}}catch(e){}
+try{
+  const saved=localStorage.getItem('firmOS_state');
+  if(saved){const p=JSON.parse(saved);['tasks','onboardProgress','nxStates','nxQ','advChecklist','bmkValues'].forEach(k=>{if(p[k])S[k]=p[k]});}
+  const savedClients=localStorage.getItem('firmOS_clients');
+  if(savedClients){
+    const sc=JSON.parse(savedClients);
+    if(sc.clients&&sc.clients.length>0)D.clients=sc.clients;
+    if(sc.advisoryClients&&sc.advisoryClients.length>0)D.advisoryClients=sc.advisoryClients;
+    if(sc.advisoryPipeline)D.advisoryPipeline=sc.advisoryPipeline;
+  }
+}catch(e){}
 
 function save(){
   try{
     localStorage.setItem('firmOS_state',JSON.stringify({tasks:S.tasks,onboardProgress:S.onboardProgress,nxStates:S.nxStates,nxQ:S.nxQ,advChecklist:S.advChecklist,bmkValues:S.bmkValues}));
+    localStorage.setItem('firmOS_clients',JSON.stringify({clients:D.clients,advisoryClients:D.advisoryClients,advisoryPipeline:D.advisoryPipeline,workflows:Object.keys(D.workflows).map(k=>({key:k,label:D.workflows[k].label,phases:D.workflows[k].phases.map(p=>({label:p.label,window:p.window,total:p.tasks.length,done:p.tasks.filter((_,ti)=>S.tasks[k+'_'+Object.keys(D.workflows).indexOf(k)+'_'+ti]).length}))})),savedAt:new Date().toISOString()}));
     const ind=document.getElementById('save-indicator');
     if(ind){ind.textContent='Saved';ind.style.color='#4ade80';setTimeout(()=>{ind.textContent='Auto-save on';ind.style.color='rgba(255,255,255,.25)';},1500);}
   }catch(e){}
@@ -852,6 +863,7 @@ function submitNewClient(){
   const services=[...document.querySelectorAll('#add-client-form .nc-svc:checked')].map(c=>c.value);
   const statesRaw=$('nc-states').value.split(',').map(s=>s.trim().toUpperCase()).filter(Boolean);
   D.clients.push({id:'c'+Date.now(),name,industry:$('nc-industry').value,status:$('nc-status').value,services:services.length?services:['Monthly Bookkeeping'],mrr:parseInt($('nc-mrr').value)||0,contact:$('nc-contact').value||'—',email:$('nc-email').value||'',states:statesRaw.length?statesRaw:['FL'],onboarded:$('nc-status').value==='active'?new Date().toISOString().split('T')[0]:null});
+  save();
   const nb=$('nb-clients');if(nb)nb.textContent=D.clients.length;
   $('add-client-form').remove();
   renderClients();
