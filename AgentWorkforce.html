@@ -108,6 +108,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
     <a class="sb-back" href="index.html">← Back to Firm OS</a>
     <div class="sb-title"><div class="sb-dot"></div><span class="sb-name">AI Agent Workforce</span></div>
     <div class="sb-sub" id="sb-sub">7 specialists · all available</div>
+    <div id="conn-indicator" style="font-size:10px;color:rgba(255,255,255,.35);margin-top:4px;line-height:1.4">Loading Firm OS data...</div>
   </div>
   <div class="nav-sec">
     <div class="nav-lbl">Your team</div>
@@ -123,7 +124,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
   <div id="view-roster" class="roster">
     <div class="roster-header">
       <div class="roster-title">Your AI workforce</div>
-      <div class="roster-sub">7 specialist agents with voice. Each agent speaks in their own voice. Select a client in any chat for full context. Use the speaker button on any response to hear it read aloud.</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div id="roster-conn" style="font-size:12px;color:var(--txm)">Checking Firm OS connection...</div><button onclick="refreshClients()" style="padding:4px 12px;border:1px solid var(--bdr2);border-radius:20px;background:none;font-size:11px;color:var(--txm);cursor:pointer;font-family:var(--sans)">&#8635; Refresh</button></div>
+    <div class="roster-sub">7 specialist agents with voice. Each agent speaks in their own voice. Select a client in any chat for full context. Use the speaker button on any response to hear it read aloud.</div>
     </div>
     <div class="roster-grid" id="roster-grid"></div>
   </div>
@@ -243,7 +245,22 @@ function speakMessage(text, agentId, msgIdx) {
 function loadFirmClients() {
   try {
     var raw = localStorage.getItem('firmOS_clients');
-    if (raw) { var p = JSON.parse(raw); FIRM_CLIENTS = p.clients || []; }
+    if (raw) {
+      var p = JSON.parse(raw);
+      FIRM_CLIENTS = p.clients || [];
+      var ind = document.getElementById('conn-indicator');
+      if (ind) {
+        ind.textContent = FIRM_CLIENTS.length + ' client' + (FIRM_CLIENTS.length !== 1 ? 's' : '') + ' synced from Firm OS';
+        ind.style.color = '#4ade80';
+      }
+    } else {
+      FIRM_CLIENTS = [];
+      var ind2 = document.getElementById('conn-indicator');
+      if (ind2) {
+        ind2.textContent = 'Open Firm OS first to sync clients';
+        ind2.style.color = 'rgba(255,255,255,.35)';
+      }
+    }
   } catch(e) { FIRM_CLIENTS = []; }
 }
 
@@ -298,6 +315,14 @@ function renderNav() {
 }
 
 function renderRoster() {
+  var rc = document.getElementById('roster-conn');
+  if (rc) {
+    if (FIRM_CLIENTS.length > 0) {
+      rc.innerHTML = '<span style="color:var(--acc,#0d6e52)">&#9679;</span> ' + FIRM_CLIENTS.length + ' client' + (FIRM_CLIENTS.length!==1?'s':'') + ' connected from Firm OS';
+    } else {
+      rc.innerHTML = '<span style="color:#f59e0b">&#9679;</span> No clients found — <a href="FirmOS.html" style="color:var(--acc,#0d6e52)">open Firm OS</a> and add a client first';
+    }
+  }
   document.getElementById('roster-grid').innerHTML = AGENTS.map(function(a) {
     var tasks = totalTasks(a.id);
     return '<div class="ag-card" onclick="openChat(\'' + a.id + '\')">'
@@ -533,6 +558,14 @@ document.getElementById('msg-input').addEventListener('keydown', function(e) {
 document.getElementById('send-btn').addEventListener('click', function() { sendMsg(); });
 
 // ── Init
+function refreshClients() {
+  loadFirmClients();
+  renderRoster();
+  renderNav();
+  var btn = event && event.target;
+  if (btn) { btn.textContent = '✓ Refreshed'; setTimeout(function(){ btn.textContent = '⟳ Refresh'; }, 1500); }
+}
+
 loadFirmClients();
 renderRoster();
 renderNav();

@@ -795,6 +795,7 @@ function save(){
 
 // ─── ROUTER ───────────────────────────────────────────────────────────────────
 function go(page){
+  save();
   S.page=page;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('on'));
@@ -1206,6 +1207,7 @@ const PAGES={
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 renderDashboard();
+save();
 </script>
 </body>
 </html>
