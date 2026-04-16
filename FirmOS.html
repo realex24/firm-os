@@ -175,7 +175,11 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--acc);cursor:point
   </div>
 
   <div class="sb-footer">
-    <div class="sb-version">Firm OS v2.0</div><a href="AgentWorkforce.html" style="display:block;margin-top:8px;padding:6px 10px;background:rgba(13,110,82,.15);border:1px solid rgba(13,110,82,.3);border-radius:6px;color:#4ade80;font-size:11px;text-decoration:none;text-align:center;transition:background .12s" onmouseover="this.style.background='rgba(13,110,82,.25)'" onmouseout="this.style.background='rgba(13,110,82,.15)'">Open AI Agent Workforce →</a>
+    <div class="sb-version">Firm OS v2.0 &nbsp;<span id="save-indicator" style="color:rgba(255,255,255,.25)">Auto-save on</span></div>
+    <div style="display:flex;gap:6px;margin-top:8px">
+      <button onclick="exportData()" style="flex:1;padding:5px 8px;border:1px solid rgba(255,255,255,.15);border-radius:6px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.55);font-size:11px;cursor:pointer;font-family:var(--sans)" title="Download backup">&#8681; Backup</button>
+      <button onclick="importData()" style="flex:1;padding:5px 8px;border:1px solid rgba(255,255,255,.15);border-radius:6px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.55);font-size:11px;cursor:pointer;font-family:var(--sans)" title="Restore backup">&#8679; Restore</button>
+    </div><a href="AgentWorkforce.html" style="display:block;margin-top:8px;padding:6px 10px;background:rgba(13,110,82,.15);border:1px solid rgba(13,110,82,.3);border-radius:6px;color:#4ade80;font-size:11px;text-decoration:none;text-align:center;transition:background .12s" onmouseover="this.style.background='rgba(13,110,82,.25)'" onmouseout="this.style.background='rgba(13,110,82,.15)'">Open AI Agent Workforce →</a>
   </div>
 </aside>
 
@@ -770,7 +774,13 @@ let S = {
 };
 try{const saved=localStorage.getItem('firmOS_state');if(saved){const p=JSON.parse(saved);['tasks','onboardProgress','nxStates','nxQ','advChecklist','bmkValues'].forEach(k=>{if(p[k])S[k]=p[k]})}}catch(e){}
 
-function save(){try{localStorage.setItem('firmOS_state',JSON.stringify({tasks:S.tasks,onboardProgress:S.onboardProgress,nxStates:S.nxStates,nxQ:S.nxQ,advChecklist:S.advChecklist,bmkValues:S.bmkValues}));}catch(e){}}
+function save(){
+  try{
+    localStorage.setItem('firmOS_state',JSON.stringify({tasks:S.tasks,onboardProgress:S.onboardProgress,nxStates:S.nxStates,nxQ:S.nxQ,advChecklist:S.advChecklist,bmkValues:S.bmkValues}));
+    const ind=document.getElementById('save-indicator');
+    if(ind){ind.textContent='Saved';ind.style.color='#4ade80';setTimeout(()=>{ind.textContent='Auto-save on';ind.style.color='rgba(255,255,255,.25)';},1500);}
+  }catch(e){}
+}
 
 // ─── ROUTER ───────────────────────────────────────────────────────────────────
 function go(page){
@@ -1114,6 +1124,59 @@ function submitPipeline(){
   D.advisoryPipeline.push({name,stage:$('pp-stage').value,potential:parseInt($('pp-potential').value)||500,notes:$('pp-notes').value||'No notes'});
   $('add-pipe-form').remove();
   renderAdvisory();
+}
+// ─── DATA BACKUP ──────────────────────────────────────────────────────────────
+function exportData(){
+  const payload={
+    version:2,
+    exported:new Date().toISOString(),
+    clients:D.clients,
+    advisoryClients:D.advisoryClients,
+    advisoryPipeline:D.advisoryPipeline,
+    state:{tasks:S.tasks,onboardProgress:S.onboardProgress,nxStates:S.nxStates,nxQ:S.nxQ,advChecklist:S.advChecklist,bmkValues:S.bmkValues}
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='firmOS-backup-'+new Date().toISOString().split('T')[0]+'.json';
+  a.click();URL.revokeObjectURL(url);
+}
+function importData(){
+  const input=document.createElement('input');
+  input.type='file';input.accept='.json';
+  input.onchange=e=>{
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try{
+        const d=JSON.parse(ev.target.result);
+        if(!d.version||!d.clients)throw new Error('Invalid backup file');
+        if(!confirm('This will replace your current client and task data with the backup from '+d.exported.split('T')[0]+'. Continue?'))return;
+        D.clients=d.clients||D.clients;
+        D.advisoryClients=d.advisoryClients||D.advisoryClients;
+        D.advisoryPipeline=d.advisoryPipeline||D.advisoryPipeline;
+        if(d.state){
+          S.tasks=d.state.tasks||{};
+          S.onboardProgress=d.state.onboardProgress||{};
+          S.nxStates=d.state.nxStates||{};
+          S.nxQ=d.state.nxQ||{};
+          S.advChecklist=d.state.advChecklist||{};
+          S.bmkValues=d.state.bmkValues||{};
+        }
+        save();
+        PAGES[S.page]&&PAGES[S.page]();
+        showToast('Backup restored successfully');
+      }catch(err){alert('Could not read backup file: '+err.message);}
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--acc);color:#fff;padding:9px 22px;border-radius:20px;font-size:13px;font-weight:500;z-index:9999;font-family:var(--sans)';
+  t.textContent=msg;document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
 }
 // ─── PAGE MAP ─────────────────────────────────────────────────────────────────
 const PAGES={

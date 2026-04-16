@@ -99,7 +99,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
     <div id="nav-agents"></div>
   </div>
   <div class="sb-footer">
-    <div class="sb-footer-text">Each agent is trained on their domain. Conversations are session-based.<br><br>Powered by Claude AI</div>
+    <button onclick="showKeySetup(true)" style="width:100%;padding:7px 12px;border:1px solid rgba(255,255,255,.15);border-radius:7px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;font-family:var(--sans);margin-bottom:10px;transition:background .12s" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.06)'">&#9881; API key settings</button>
+    <div class="sb-footer-text">Each agent trained on their domain. Powered by Claude AI.</div>
   </div>
 </aside>
 
@@ -285,6 +286,62 @@ function renderMessages(){
 
 function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
+function setBusy(state){busy=state;renderNav();if(activeId){const btn=document.getElementById('send-btn');if(btn)btn.disabled=state;}}
+
+function showKeySetup(prefill){
+  if(document.getElementById('key-setup'))return;
+  const wrap=document.createElement('div');
+  wrap.id='key-setup';
+  wrap.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem;font-family:var(--sans)';
+  const existing=localStorage.getItem('firmOS_apiKey')||'';
+  wrap.innerHTML=`<div style="background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:480px;color:#18181b">
+    <div style="font-size:18px;font-weight:700;margin-bottom:6px">Connect your Anthropic API key</div>
+    <div style="font-size:13px;color:#6b6b74;margin-bottom:1.25rem;line-height:1.6">Your 7 AI agents run on Claude. To use them on your hosted site, you need a free Anthropic API key. This is stored only in your browser — never sent anywhere except directly to Anthropic.</div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534;margin-bottom:1.25rem;line-height:1.6">
+      1. Go to <strong>console.anthropic.com</strong><br>
+      2. Sign up / log in → click <strong>API Keys</strong><br>
+      3. Click <strong>Create Key</strong> → copy the key (starts with sk-ant-…)<br>
+      4. Paste it below
+    </div>
+    <div style="margin-bottom:1rem">
+      <label style="display:block;font-size:12px;font-weight:500;color:#6b6b74;margin-bottom:4px">Your API key</label>
+      <input id="api-key-input" type="password" value="${existing}" placeholder="sk-ant-api03-..." style="width:100%;padding:10px 12px;border:1px solid #d4d4d0;border-radius:8px;font-size:14px;font-family:monospace;outline:none">
+    </div>
+    <div style="display:flex;gap:10px">
+      <button onclick="saveKey()" style="flex:1;padding:10px;background:#0d6e52;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Save & activate agents</button>
+      ${existing?'<button onclick="document.getElementById(\'key-setup\').remove()" style="padding:10px 16px;border:1px solid #d4d4d0;border-radius:8px;background:none;font-size:14px;cursor:pointer;font-family:inherit">Cancel</button>':''}
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:#a1a1aa;text-align:center">Your key is stored in your browser only. Never shared. Free tier gives ~$5 credit — enough for hundreds of agent conversations.</div>
+  </div>`;
+  document.body.appendChild(wrap);
+  wrap.addEventListener('click',e=>{if(e.target===wrap&&existing)wrap.remove();});
+  setTimeout(()=>{const inp=document.getElementById('api-key-input');if(inp)inp.focus();},100);
+}
+
+function saveKey(){
+  const val=document.getElementById('api-key-input')&&document.getElementById('api-key-input').value.trim();
+  if(!val||!val.startsWith('sk-')){
+    const inp=document.getElementById('api-key-input');
+    if(inp){inp.style.borderColor='#dc2626';inp.placeholder='Must start with sk-ant-...';}
+    return;
+  }
+  localStorage.setItem('firmOS_apiKey',val);
+  const setup=document.getElementById('key-setup');
+  if(setup)setup.remove();
+  showKeyBanner();
+}
+
+function showKeyBanner(){
+  const existing=document.getElementById('key-banner');
+  if(existing)existing.remove();
+  const banner=document.createElement('div');
+  banner.id='key-banner';
+  banner.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0d6e52;color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:9998;font-family:var(--sans);pointer-events:none';
+  banner.textContent='✓ API key saved — all 7 agents are now active';
+  document.body.appendChild(banner);
+  setTimeout(()=>banner.remove(),3000);
+}
+
 async function send(text){
   text=text||document.getElementById('msg-input').value;
   if(!text.trim()||!activeId||busy)return;
@@ -294,13 +351,17 @@ async function send(text){
   document.getElementById('msg-input').value='';
   document.getElementById('msg-input').style.height='auto';
   document.getElementById('send-btn').disabled=true;
-  busy=true;
+  setBusy(true);
   renderMessages();
-  renderNav();
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':localStorage.getItem('firmOS_apiKey')||'',
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
@@ -314,10 +375,8 @@ async function send(text){
   }catch{
     chats[activeId].push({role:'assistant',content:'Connection issue — please try again in a moment.'});
   }
-  busy=false;
-  document.getElementById('send-btn').disabled=false;
+  setBusy(false);
   renderMessages();
-  renderNav();
 }
 
 function clearChat(){
@@ -336,6 +395,10 @@ document.getElementById('msg-input').addEventListener('keydown',function(e){
 
 renderRoster();
 renderNav();
+// Check for API key on startup
+if(!localStorage.getItem('firmOS_apiKey')){
+  setTimeout(()=>showKeySetup(),600);
+}
 </script>
 </body>
 </html>
