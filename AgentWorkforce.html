@@ -10,7 +10,7 @@
   --sb:#0c0c1a;--sbt:rgba(255,255,255,.75);--sbh:rgba(255,255,255,.07);--sba:rgba(255,255,255,.1);
   --bg:#f7f7f4;--sur:#ffffff;--bdr:#e6e6e1;--bdr2:#d2d2cb;
   --tx:#18181b;--txm:#6b6b74;--txh:#a1a1aa;
-  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--mono:'SF Mono','Fira Mono',monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --r:10px;--rs:8px;--sbw:220px;
 }
 body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100vh;display:flex;font-size:14px;line-height:1.6;overflow:hidden}
@@ -33,17 +33,16 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
 .nav-info{flex:1;min-width:0}
 .nav-name{font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nav-role{font-size:10px;color:rgba(255,255,255,.35);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nav-badge{font-size:10px;font-family:var(--mono);color:rgba(255,255,255,.3);flex-shrink:0}
+.nav-badge{font-size:10px;color:rgba(255,255,255,.3);flex-shrink:0}
 .nav-status{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .sb-footer{margin-top:auto;padding:1rem;border-top:1px solid rgba(255,255,255,.06)}
 .sb-footer-text{font-size:11px;color:rgba(255,255,255,.2);line-height:1.5}
 #main{margin-left:var(--sbw);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.header{display:flex;align-items:center;gap:14px;padding:14px 24px;background:var(--sur);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.header{display:flex;align-items:center;gap:14px;padding:14px 24px;background:var(--sur);border-bottom:1px solid var(--bdr);flex-shrink:0;flex-wrap:wrap}
 .h-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
 .h-name{font-size:15px;font-weight:600;color:var(--tx)}
 .h-status{font-size:12px;color:var(--txm);margin-top:1px}
-.h-status .dot{font-size:8px;margin-right:2px}
-.h-actions{margin-left:auto;display:flex;gap:8px}
+.h-actions{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .btn{padding:5px 14px;border:1px solid var(--bdr2);border-radius:var(--rs);background:var(--sur);font-size:12px;color:var(--txm);cursor:pointer;font-family:var(--sans);transition:all .12s}
 .btn:hover{background:var(--bg)}
 .messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px;background:var(--bg)}
@@ -53,13 +52,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
 .you .msg-av{background:#3f3f46}
 .bubble{max-width:70%;padding:10px 14px;font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
 .bubble.agent{background:var(--sur);border:1px solid var(--bdr);border-radius:4px 14px 14px 14px;color:var(--tx)}
-.bubble.you{background:var(--agent-color,#0d6e52);color:#fff;border-radius:14px 4px 14px 14px}
+.bubble.you{color:#fff;border-radius:14px 4px 14px 14px}
 .typing{display:flex;align-items:center;gap:5px;padding:12px 14px;background:var(--sur);border:1px solid var(--bdr);border-radius:4px 14px 14px 14px}
 .td{width:7px;height:7px;border-radius:50%;background:#ccc;animation:bounce .9s infinite}
 .input-area{padding:14px 24px 18px;background:var(--sur);border-top:1px solid var(--bdr);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
 #msg-input{flex:1;padding:10px 14px;border:1px solid var(--bdr2);border-radius:var(--r);font-size:14px;font-family:var(--sans);resize:none;outline:none;line-height:1.55;color:var(--tx);min-height:44px;max-height:120px;overflow:auto;transition:border-color .15s}
-#msg-input:focus{border-color:var(--agent-color,#0d6e52);box-shadow:0 0 0 3px color-mix(in srgb,var(--agent-color,#0d6e52) 12%,transparent)}
-#send-btn{padding:10px 22px;border-radius:var(--r);border:none;font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0;font-family:var(--sans);transition:all .15s;background:var(--agent-color,#0d6e52);color:#fff}
+#send-btn{padding:10px 22px;border-radius:var(--r);border:none;font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0;font-family:var(--sans);transition:all .15s}
 #send-btn:disabled{background:var(--bdr2);color:var(--txh);cursor:default}
 #send-btn:not(:disabled):hover{filter:brightness(1.08)}
 .roster{flex:1;overflow-y:auto;padding:32px;background:var(--bg)}
@@ -68,7 +66,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
 .roster-sub{font-size:14px;color:var(--txm);line-height:1.6;max-width:520px}
 .roster-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
 .ag-card{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:20px 22px;cursor:pointer;transition:all .15s}
-.ag-card:hover{border-color:var(--agent-color,#0d6e52);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.ag-card:hover{transform:translateY(-1px)}
 .ag-card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .ag-card-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff}
 .ag-card-name{font-size:15px;font-weight:700;color:var(--tx)}
@@ -82,9 +80,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
 .empty-title{font-size:17px;font-weight:600;color:var(--tx);margin-bottom:8px}
 .empty-sub{font-size:13px;color:var(--txh);max-width:320px;line-height:1.6;margin-bottom:20px}
 .quick-starters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.qs-btn{padding:8px 16px;border-radius:22px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--sans);transition:opacity .12s}
-.qs-btn:hover{opacity:.82}
-::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}::-webkit-scrollbar-track{background:transparent}
+.qs-btn{padding:8px 16px;border-radius:22px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--sans)}
+.qs-btn:hover{opacity:.85}
+.client-sel{padding:5px 10px;border:1px solid var(--bdr2);border-radius:6px;font-size:12px;font-family:var(--sans);background:var(--sur);color:var(--tx);max-width:170px;cursor:pointer}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+::-webkit-scrollbar-track{background:transparent}
 </style>
 </head>
 <body>
@@ -99,7 +100,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
     <div id="nav-agents"></div>
   </div>
   <div class="sb-footer">
-    <button onclick="showKeySetup(true)" style="width:100%;padding:7px 12px;border:1px solid rgba(255,255,255,.15);border-radius:7px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;font-family:var(--sans);margin-bottom:10px;transition:background .12s" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.06)'">&#9881; API key settings</button>
+    <button onclick="showKeySetup()" style="width:100%;padding:7px 12px;border:1px solid rgba(255,255,255,.15);border-radius:7px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;font-family:var(--sans);margin-bottom:10px">&#9881; API key settings</button>
     <div class="sb-footer-text">Each agent trained on their domain. Powered by Claude AI.</div>
   </div>
 </aside>
@@ -108,344 +109,316 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
   <div id="view-roster" class="roster">
     <div class="roster-header">
       <div class="roster-title">Your AI workforce</div>
-      <div class="roster-sub">7 specialist agents, available 24/7. Each trained on their domain — bookkeeping, tax, payroll, compliance, analysis, writing, and client relations. Click any agent to start delegating.</div>
+      <div class="roster-sub">7 specialist agents, available 24/7. Each trained on their domain. Select a client from the dropdown inside any chat to give your agent full context about who they are working with.</div>
     </div>
     <div class="roster-grid" id="roster-grid"></div>
   </div>
-
   <div id="view-chat" style="display:none;flex-direction:column;height:100%">
     <div class="header" id="chat-header"></div>
     <div class="messages" id="messages"></div>
     <div class="input-area">
-      <textarea id="msg-input" rows="1" placeholder="Type your message… (Enter to send · Shift+Enter for new line)"></textarea>
+      <textarea id="msg-input" rows="1" placeholder="Type your message… (Enter to send · Shift+Enter for newline)"></textarea>
       <button id="send-btn" disabled>Send</button>
     </div>
   </div>
 </main>
 
 <script>
-const AGENTS=[
-  {id:'alex',name:'Alex Chen',role:'Senior Bookkeeper',initials:'AC',color:'#0d6e52',lightBg:'#e0f5ef',darkTxt:'#08503c',
+var AGENTS = [
+  {id:'alex', name:'Alex Chen', role:'Senior Bookkeeper', initials:'AC', color:'#0d6e52', lightBg:'#e0f5ef', darkTxt:'#08503c',
    desc:'QBO expert. Handles reconciliations, transaction categorization, bank rules, and month-end close.',
-   quick:['Walk me through reconciling a discrepancy','How do I set up a QBO bank rule?','My books don\'t balance — help me find the issue','Give me a month-end close checklist'],
-   sys:`You are Alex Chen, a senior bookkeeper with 15 years of QuickBooks Online experience at a solo CPA firm. You help the firm owner with daily bookkeeping tasks, QBO troubleshooting, bank reconciliations, transaction categorization, bank rule setup, and month-end close procedures. Be concise and practical. Use numbered steps when explaining procedures. Ask clarifying questions when needed. When relevant, mention exact QBO menu paths (e.g. Accounting → Reconcile). You are the firm's first line of defense for anything bookkeeping-related.`},
-  {id:'morgan',name:'Morgan Park',role:'Tax Strategist',initials:'MP',color:'#534AB7',lightBg:'#EEEDFE',darkTxt:'#3C3489',
+   quick:['Walk me through reconciling a discrepancy','How do I set up a QBO bank rule?','My books do not balance — help me find the issue','Give me a month-end close checklist'],
+   sys:'You are Alex Chen, a senior bookkeeper with 15 years of QuickBooks Online experience at a solo CPA firm. Help the firm owner with bookkeeping tasks, QBO troubleshooting, bank reconciliations, transaction categorization, bank rule setup, and month-end close. Be concise and practical. Use numbered steps. Mention exact QBO menu paths when relevant (e.g. Accounting → Reconcile).'},
+  {id:'morgan', name:'Morgan Park', role:'Tax Strategist', initials:'MP', color:'#534AB7', lightBg:'#EEEDFE', darkTxt:'#3C3489',
    desc:'CPA with deep small-business tax expertise. Planning memos, estimated payments, deductions, S-Corp strategy.',
-   quick:['Calculate my client\'s Q2 estimated tax payment','What deductions is my construction client missing?','Draft a tax planning memo for an S-Corp client','Analyze salary vs. distribution for an S-Corp owner'],
-   sys:`You are Morgan Park, a CPA and tax strategist at a solo accounting firm. You specialize in small business tax planning, estimated quarterly payments, S-Corp elections and salary/distribution optimization, retirement plan contributions (SEP-IRA, Solo 401k, SIMPLE IRA), Section 179 and bonus depreciation, QBI deductions, and year-end tax strategy. Be specific and practical. When drafting memos, use professional language. Always note your guidance is for planning purposes and should be reviewed by a licensed CPA before implementation. Ask for entity type, state, and financials before giving specific numbers.`},
-  {id:'jordan',name:'Jordan Ellis',role:'Client Relations',initials:'JE',color:'#993556',lightBg:'#FBEAF0',darkTxt:'#72243E',
+   quick:['Calculate my client Q2 estimated tax payment','What deductions is my construction client missing?','Draft a tax planning memo for an S-Corp client','Analyze salary vs distribution for an S-Corp owner'],
+   sys:'You are Morgan Park, a CPA and tax strategist at a solo accounting firm. You specialize in small business tax planning, estimated quarterly payments, S-Corp elections and salary/distribution optimization, retirement plan contributions (SEP-IRA, Solo 401k, SIMPLE IRA), Section 179 and bonus depreciation, QBI deductions, and year-end tax strategy. Be specific and practical. Always note guidance is for planning purposes only.'},
+  {id:'jordan', name:'Jordan Ellis', role:'Client Relations', initials:'JE', color:'#993556', lightBg:'#FBEAF0', darkTxt:'#72243E',
    desc:'Drafts all client-facing communications — emails, financial narratives, meeting follow-ups, deadline notices.',
    quick:['Draft a monthly document request email','Write a financial narrative for a restaurant client','Compose a Q1 tax deadline reminder','Create a quarterly review meeting invite'],
-   sys:`You are Jordan Ellis, a client communications specialist at a solo accounting firm. You draft professional, warm, and clear emails and client-facing documents. Style: professional but approachable, jargon-free, action-oriented, concise. For emails, always include: subject line, brief context, key ask or information, and warm sign-off. Ask for client name, firm name, and specific figures or dates before drafting. Produce complete, ready-to-send emails — not templates with blanks.`},
-  {id:'riley',name:'Riley Torres',role:'Compliance Officer',initials:'RT',color:'#854F0B',lightBg:'#FAEEDA',darkTxt:'#633806',
-   desc:'Sales tax nexus (post-Wayfair), payroll compliance, EFTPS deposits, 1099s, and multi-state issues.',
-   quick:['Does my client have nexus in California?','What\'s the EFTPS deposit schedule for a new employer?','Review my client\'s multi-state payroll exposure','1099-NEC filing requirements and deadlines'],
-   sys:`You are Riley Torres, a compliance specialist at a solo accounting firm. Expert in: sales tax economic nexus (post-Wayfair), state thresholds and registration, payroll tax compliance (federal/state withholding, FICA, FUTA, SUTA), EFTPS deposit schedules, 1099-NEC and W-2 preparation, and multi-state payroll. Give practical, actionable guidance. For nexus analysis, ask about states of sale, annual revenue by state, transaction counts, warehouses, and employees. Always remind users to verify current thresholds with each state's department of revenue.`},
-  {id:'sam',name:'Sam Okafor',role:'CFO Analyst',initials:'SO',color:'#185FA5',lightBg:'#E6F1FB',darkTxt:'#0C447C',
+   sys:'You are Jordan Ellis, a client communications specialist at a solo accounting firm. You draft professional, warm, and clear emails and client-facing documents. Style: professional but approachable, jargon-free, action-oriented, concise. For emails always include: subject line, brief context, key ask, warm sign-off. Produce complete ready-to-send emails — not templates with blanks.'},
+  {id:'riley', name:'Riley Torres', role:'Compliance Officer', initials:'RT', color:'#854F0B', lightBg:'#FAEEDA', darkTxt:'#633806',
+   desc:'Sales tax nexus, payroll compliance, EFTPS deposits, 1099s, and multi-state issues.',
+   quick:['Does my client have nexus in California?','What is the EFTPS deposit schedule for a new employer?','Review my client multi-state payroll exposure','1099-NEC filing requirements and deadlines'],
+   sys:'You are Riley Torres, a compliance specialist at a solo accounting firm. Expert in: sales tax economic nexus (post-Wayfair), state thresholds and registration, payroll tax compliance (federal/state withholding, FICA, FUTA, SUTA), EFTPS deposit schedules, 1099-NEC and W-2 preparation, and multi-state payroll. Give practical, actionable guidance. Always remind users to verify current thresholds with each state revenue department.'},
+  {id:'sam', name:'Sam Okafor', role:'CFO Analyst', initials:'SO', color:'#185FA5', lightBg:'#E6F1FB', darkTxt:'#0C447C',
    desc:'Fractional CFO-level insights. KPI analysis, industry benchmarks, cash flow, and strategic recommendations.',
-   quick:['Analyze these monthly financials for a restaurant','How does my client compare to industry benchmarks?','My client\'s cash is shrinking — what\'s happening?','Give me a business health score from these numbers'],
-   sys:`You are Sam Okafor, a fractional CFO analyst at a solo accounting firm. When given financial data: (1) identify the 2-3 most important insights — not just descriptions; (2) compare to industry benchmarks; (3) flag risks or anomalies; (4) suggest 1-2 specific, actionable recommendations; (5) use plain language for business owners. Industries you benchmark well: restaurants, construction, professional services, retail, SaaS. Always ask the industry before benchmarking. Be direct — owners want to know: are we doing well, and what should we change?`},
-  {id:'casey',name:'Casey Morgan',role:'Report & SOP Writer',initials:'CM',color:'#3B6D11',lightBg:'#EAF3DE',darkTxt:'#27500A',
+   quick:['Analyze these monthly financials for a restaurant','How does my client compare to industry benchmarks?','My client cash is shrinking — what is happening?','Give me a business health score from these numbers'],
+   sys:'You are Sam Okafor, a fractional CFO analyst at a solo accounting firm. When given financial data: (1) identify the 2-3 most important insights; (2) compare to industry benchmarks; (3) flag risks or anomalies; (4) suggest 1-2 specific actionable recommendations; (5) use plain language for business owners. Industries you know well: restaurants, construction, professional services, retail, SaaS. Be direct.'},
+  {id:'casey', name:'Casey Morgan', role:'Report and SOP Writer', initials:'CM', color:'#3B6D11', lightBg:'#EAF3DE', darkTxt:'#27500A',
    desc:'Creates financial narratives, detailed SOPs, engagement letters, and client education content.',
    quick:['Write a month-end financial narrative for a retail client','Create a full SOP for bank reconciliation in QBO','Draft an engagement letter for monthly bookkeeping','Write a client newsletter on Q2 tax planning tips'],
-   sys:`You are Casey Morgan, a financial writer at a solo accounting firm. You create: monthly financial narrative summaries (explain numbers in business terms), detailed SOPs with specific numbered steps using exact QBO menu paths, engagement letters, and client-facing educational content. Standards: for clients — completely jargon-free, explain implications, suggest actions. For SOPs — precise, technical, step-by-step. Always produce complete, usable output. When writing financial narratives, interpret the numbers: what do they mean for the business? What should the owner do?`},
-  {id:'drew',name:'Drew Rivera',role:'Payroll Specialist',initials:'DR',color:'#A32D2D',lightBg:'#FCEBEB',darkTxt:'#791F1F',
+   sys:'You are Casey Morgan, a financial writer at a solo accounting firm. You create: monthly financial narrative summaries (explain numbers in business terms), detailed SOPs with specific numbered steps using exact QBO menu paths, engagement letters, and client-facing educational content. For clients: completely jargon-free, explain implications, suggest actions. For SOPs: precise, technical, step-by-step. Always produce complete usable output.'},
+  {id:'drew', name:'Drew Rivera', role:'Payroll Specialist', initials:'DR', color:'#A32D2D', lightBg:'#FCEBEB', darkTxt:'#791F1F',
    desc:'Payroll processing, tax withholding, EFTPS, new hire setup, and year-end W-2 preparation.',
    quick:['Walk me through processing payroll in QBO','New hire setup checklist — what do I need?','How do I handle a garnishment in payroll?','Year-end W-2 preparation steps'],
-   sys:`You are Drew Rivera, a payroll specialist at a solo accounting firm. Expert in: payroll processing in QBO Payroll and Gusto, federal and state payroll tax withholding (income tax, FICA, FUTA, SUTA), EFTPS deposit schedules, new hire onboarding (W-4, I-9, direct deposit, state new hire reporting), garnishments and wage levies, retirement plan deductions (401k, SIMPLE IRA, HSA), year-end W-2 and 1099 preparation, and payroll journal entries in QBO. Give step-by-step guidance. Ask for state, pay frequency, and employee count when relevant. Flag compliance risks immediately.`}
+   sys:'You are Drew Rivera, a payroll specialist at a solo accounting firm. Expert in: payroll processing in QBO Payroll and Gusto, federal and state payroll tax withholding (income tax, FICA, FUTA, SUTA), EFTPS deposit schedules, new hire onboarding (W-4, I-9, direct deposit, state new hire reporting), garnishments and wage levies, retirement plan deductions, year-end W-2 and 1099 preparation, and payroll journal entries in QBO. Give step-by-step guidance. Flag compliance risks immediately.'}
 ];
 
-const chats={};
-let activeId=null;
-let busy=false;
+var chats = {};
+var activeId = null;
+var busy = false;
+var FIRM_CLIENTS = [];
 
-function totalTasks(id){return(chats[id]||[]).filter(m=>m.role==='user').length}
-
-function agentColor(id){
-  const a=AGENTS.find(x=>x.id===id);
-  return a?a.color:'#0d6e52';
+function loadFirmClients() {
+  try {
+    var raw = localStorage.getItem('firmOS_clients');
+    if (raw) {
+      var parsed = JSON.parse(raw);
+      FIRM_CLIENTS = parsed.clients || [];
+    }
+  } catch(e) {
+    FIRM_CLIENTS = [];
+  }
 }
 
-function setAgentTheme(color){
-  document.documentElement.style.setProperty('--agent-color',color);
+function buildClientContext() {
+  if (!FIRM_CLIENTS.length) return '';
+  var lines = FIRM_CLIENTS.map(function(c) {
+    return '- ' + c.name + ' | Industry: ' + c.industry + ' | Services: ' + (c.services || []).join(', ') + ' | MRR: $' + (c.mrr || 0) + ' | States: ' + (c.states || []).join(', ') + ' | Status: ' + c.status;
+  });
+  return '\n\nYOUR FIRM CLIENT ROSTER (from Firm OS):\n' + lines.join('\n') + '\n\nWhen the user mentions a client name, use this roster to give context-aware responses about that client.';
 }
 
-function renderNav(){
-  document.getElementById('nav-agents').innerHTML=AGENTS.map(a=>{
-    const on=activeId===a.id;
-    const tasks=totalTasks(a.id);
-    const b=busy&&activeId===a.id;
-    return`<button class="nav ${on?'on':''}" style="--agent-color:${a.color}" onclick="openChat('${a.id}')">
-      <div class="nav-av" style="background:${a.color}">${a.initials}</div>
-      <div class="nav-info">
-        <div class="nav-name">${a.name.split(' ')[0]}</div>
-        <div class="nav-role">${a.role}</div>
-      </div>
-      ${tasks>0?`<div class="nav-badge">${tasks}</div>`:''}
-      <div class="nav-status" style="background:${b?'#f59e0b':'#4ade80'}"></div>
-    </button>`;
+function getSelectedClient() {
+  var sel = document.getElementById('client-ctx');
+  if (!sel || !sel.value) return null;
+  return FIRM_CLIENTS.find(function(c) { return c.id === sel.value; }) || null;
+}
+
+function buildSystemPrompt(agent) {
+  loadFirmClients();
+  var base = agent.sys + buildClientContext();
+  var selected = getSelectedClient();
+  if (selected) {
+    base += '\n\nACTIVE CLIENT: ' + selected.name + ' | Industry: ' + selected.industry + ' | Services: ' + (selected.services || []).join(', ') + ' | States: ' + (selected.states || []).join(', ') + ' | MRR: $' + (selected.mrr || 0) + '. Focus responses on this client.';
+  }
+  return base;
+}
+
+function buildClientSelector() {
+  loadFirmClients();
+  if (!FIRM_CLIENTS.length) {
+    return '<span style="font-size:11px;color:var(--txh);padding:4px 8px">Add clients in Firm OS</span>';
+  }
+  var opts = FIRM_CLIENTS.map(function(c) {
+    return '<option value="' + c.id + '">' + c.name + '</option>';
   }).join('');
-
-  const active=AGENTS.filter(a=>totalTasks(a.id)>0).length;
-  document.getElementById('sb-sub').textContent=`${AGENTS.length} agents · ${active} active today`;
+  return '<select class="client-sel" id="client-ctx"><option value="">All clients</option>' + opts + '</select>';
 }
 
-function renderRoster(){
-  document.getElementById('roster-grid').innerHTML=AGENTS.map(a=>{
-    const tasks=totalTasks(a.id);
-    return`<div class="ag-card" style="--agent-color:${a.color}" onclick="openChat('${a.id}')">
-      <div class="ag-card-top">
-        <div class="ag-card-av" style="background:${a.color}">${a.initials}</div>
-        <div>
-          <div class="ag-card-name">${a.name}</div>
-          <div class="ag-card-role" style="color:${a.color}">${a.role}</div>
-        </div>
-        ${tasks>0?`<div style="margin-left:auto;background:${a.lightBg};color:${a.darkTxt};font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px">${tasks} task${tasks!==1?'s':''}</div>`:''}
-      </div>
-      <div class="ag-card-desc">${a.desc}</div>
-      <div class="quick-tags">
-        ${a.quick.slice(0,2).map(q=>`<span class="quick-tag" style="background:${a.lightBg};color:${a.darkTxt}">${q.length>36?q.slice(0,36)+'…':q}</span>`).join('')}
-      </div>
-      <button class="ag-card-btn" style="background:${a.color};color:#fff">${tasks>0?'Continue →':'Start chat →'}</button>
-    </div>`;
+function totalTasks(id) { return (chats[id] || []).filter(function(m) { return m.role === 'user'; }).length; }
+
+function agentColor(id) {
+  var a = AGENTS.find(function(x) { return x.id === id; });
+  return a ? a.color : '#0d6e52';
+}
+
+function setTheme(color) {
+  document.documentElement.style.setProperty('--agent-color', color);
+}
+
+function renderNav() {
+  var active = AGENTS.filter(function(a) { return totalTasks(a.id) > 0; }).length;
+  document.getElementById('sb-sub').textContent = '7 agents · ' + active + ' active today';
+  document.getElementById('nav-agents').innerHTML = AGENTS.map(function(a) {
+    var on = activeId === a.id;
+    var tasks = totalTasks(a.id);
+    var isBusy = busy && activeId === a.id;
+    return '<button class="nav ' + (on ? 'on' : '') + '" style="--agent-color:' + a.color + '" onclick="openChat(\'' + a.id + '\')">'
+      + '<div class="nav-av" style="background:' + a.color + '">' + a.initials + '</div>'
+      + '<div class="nav-info"><div class="nav-name">' + a.name.split(' ')[0] + '</div><div class="nav-role">' + a.role + '</div></div>'
+      + (tasks > 0 ? '<div class="nav-badge">' + tasks + '</div>' : '')
+      + '<div class="nav-status" style="background:' + (isBusy ? '#f59e0b' : '#4ade80') + '"></div>'
+      + '</button>';
   }).join('');
 }
 
-function openChat(id){
-  activeId=id;
-  const agent=AGENTS.find(a=>a.id===id);
-  setAgentTheme(agent.color);
-  document.getElementById('view-roster').style.display='none';
-  const vc=document.getElementById('view-chat');
-  vc.style.display='flex';
+function renderRoster() {
+  document.getElementById('roster-grid').innerHTML = AGENTS.map(function(a) {
+    var tasks = totalTasks(a.id);
+    return '<div class="ag-card" style="--agent-color:' + a.color + '" onclick="openChat(\'' + a.id + '\')">'
+      + '<div class="ag-card-top">'
+      + '<div class="ag-card-av" style="background:' + a.color + '">' + a.initials + '</div>'
+      + '<div><div class="ag-card-name">' + a.name + '</div><div class="ag-card-role" style="color:' + a.color + '">' + a.role + '</div></div>'
+      + (tasks > 0 ? '<div style="margin-left:auto;background:' + a.lightBg + ';color:' + a.darkTxt + ';font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px">' + tasks + ' task' + (tasks !== 1 ? 's' : '') + '</div>' : '')
+      + '</div>'
+      + '<div class="ag-card-desc">' + a.desc + '</div>'
+      + '<div class="quick-tags">' + a.quick.slice(0, 2).map(function(q) { return '<span class="quick-tag" style="background:' + a.lightBg + ';color:' + a.darkTxt + '">' + (q.length > 36 ? q.slice(0, 36) + '...' : q) + '</span>'; }).join('') + '</div>'
+      + '<button class="ag-card-btn" style="background:' + a.color + ';color:#fff">' + (tasks > 0 ? 'Continue' : 'Start chat') + ' →</button>'
+      + '</div>';
+  }).join('');
+}
 
-  // header
-  document.getElementById('chat-header').innerHTML=`
-    <div class="h-av" style="background:${agent.color}">${agent.initials}</div>
-    <div>
-      <div class="h-name">${agent.name}</div>
-      <div class="h-status"><span class="dot" style="color:${busy?'#f59e0b':'#4ade80'}">●</span> ${busy?'Working…':'Available — '+agent.role}</div>
-    </div>
-    <div class="h-actions" style="display:flex;align-items:center;gap:8px">
-      ${buildClientSelector()}
-      <button class="btn" onclick="clearChat()">Clear</button>
-      <button class="btn" onclick="showRoster()">← Team</button>
-    </div>`;
-
+function openChat(id) {
+  activeId = id;
+  var agent = AGENTS.find(function(a) { return a.id === id; });
+  setTheme(agent.color);
+  document.getElementById('view-roster').style.display = 'none';
+  var vc = document.getElementById('view-chat');
+  vc.style.display = 'flex';
+  document.getElementById('chat-header').innerHTML =
+    '<div class="h-av" style="background:' + agent.color + '">' + agent.initials + '</div>'
+    + '<div><div class="h-name">' + agent.name + '</div>'
+    + '<div class="h-status"><span style="color:' + (busy ? '#f59e0b' : '#4ade80') + '">&#9679;</span> ' + (busy ? 'Working...' : 'Available — ' + agent.role) + '</div></div>'
+    + '<div class="h-actions">'
+    + buildClientSelector()
+    + '<button class="btn" onclick="clearChat()">Clear</button>'
+    + '<button class="btn" onclick="showRoster()">&#8592; Team</button>'
+    + '</div>';
   renderMessages();
   renderNav();
   document.getElementById('msg-input').focus();
 }
 
-function showRoster(){
-  activeId=null;
-  document.getElementById('view-roster').style.display='block';
-  document.getElementById('view-chat').style.display='none';
+function showRoster() {
+  activeId = null;
+  document.getElementById('view-roster').style.display = 'block';
+  document.getElementById('view-chat').style.display = 'none';
   renderNav();
   renderRoster();
 }
 
-function renderMessages(){
-  if(!activeId)return;
-  const agent=AGENTS.find(a=>a.id===activeId);
-  const msgs=chats[activeId]||[];
-  const container=document.getElementById('messages');
+function clearChat() {
+  if (activeId) { chats[activeId] = []; renderMessages(); }
+}
 
-  if(msgs.length===0){
-    container.innerHTML=`
-      <div class="empty">
-        <div class="empty-av" style="background:${agent.lightBg};color:${agent.color}">${agent.initials}</div>
-        <div class="empty-title">Hi, I'm ${agent.name.split(' ')[0]}</div>
-        <div class="empty-sub">${agent.desc} Ask me anything or pick a quick task below.</div>
-        <div class="quick-starters">
-          ${agent.quick.map(q=>`<button class="qs-btn" style="background:${agent.lightBg};color:${agent.darkTxt}" onclick="send(${JSON.stringify(q)})">${q}</button>`).join('')}
-        </div>
-      </div>`;
+function esc(t) {
+  return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderMessages() {
+  if (!activeId) return;
+  var agent = AGENTS.find(function(a) { return a.id === activeId; });
+  var msgs = chats[activeId] || [];
+  var container = document.getElementById('messages');
+  if (msgs.length === 0) {
+    container.innerHTML = '<div class="empty">'
+      + '<div class="empty-av" style="background:' + agent.lightBg + ';color:' + agent.color + '">' + agent.initials + '</div>'
+      + '<div class="empty-title">Hi, I\'m ' + agent.name.split(' ')[0] + '</div>'
+      + '<div class="empty-sub">' + agent.desc + ' Ask me anything or pick a quick task below.</div>'
+      + '<div class="quick-starters">' + agent.quick.map(function(q) { return '<button class="qs-btn" style="background:' + agent.lightBg + ';color:' + agent.darkTxt + '" onclick="sendMsg(' + JSON.stringify(q) + ')">' + q + '</button>'; }).join('') + '</div>'
+      + '</div>';
     return;
   }
-
-  container.innerHTML=msgs.map(m=>{
-    const isYou=m.role==='user';
-    return`<div class="msg ${isYou?'you':''}">
-      <div class="msg-av" style="background:${isYou?'#3f3f46':agent.color}">${isYou?'YOU':agent.initials}</div>
-      <div class="bubble ${isYou?'you':'agent'}" style="${isYou?'--agent-color:'+agent.color:''}">${esc(m.content)}</div>
-    </div>`;
+  container.innerHTML = msgs.map(function(m) {
+    var isYou = m.role === 'user';
+    return '<div class="msg ' + (isYou ? 'you' : '') + '">'
+      + '<div class="msg-av" style="background:' + (isYou ? '#3f3f46' : agent.color) + '">' + (isYou ? 'YOU' : agent.initials) + '</div>'
+      + '<div class="bubble ' + (isYou ? 'you' : 'agent') + '" style="' + (isYou ? 'background:' + agent.color : '') + '">' + esc(m.content) + '</div>'
+      + '</div>';
   }).join('');
-
-  if(busy){
-    container.innerHTML+=`<div class="msg">
-      <div class="msg-av" style="background:${agent.color}">${agent.initials}</div>
-      <div class="typing">
-        <div class="td" style="animation-delay:0s"></div>
-        <div class="td" style="animation-delay:.18s"></div>
-        <div class="td" style="animation-delay:.36s"></div>
-      </div>
-    </div>`;
+  if (busy) {
+    container.innerHTML += '<div class="msg"><div class="msg-av" style="background:' + agent.color + '">' + agent.initials + '</div>'
+      + '<div class="typing"><div class="td" style="animation-delay:0s"></div><div class="td" style="animation-delay:.18s"></div><div class="td" style="animation-delay:.36s"></div></div></div>';
   }
-  container.scrollTop=container.scrollHeight;
+  container.scrollTop = container.scrollHeight;
 }
 
-function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-
-function setBusy(state){busy=state;renderNav();if(activeId){const btn=document.getElementById('send-btn');if(btn)btn.disabled=state;}}
-
-function showKeySetup(prefill){
-  if(document.getElementById('key-setup'))return;
-  const wrap=document.createElement('div');
-  wrap.id='key-setup';
-  wrap.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem;font-family:var(--sans)';
-  const existing=localStorage.getItem('firmOS_apiKey')||'';
-  wrap.innerHTML=`<div style="background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:480px;color:#18181b">
-    <div style="font-size:18px;font-weight:700;margin-bottom:6px">Connect your Anthropic API key</div>
-    <div style="font-size:13px;color:#6b6b74;margin-bottom:1.25rem;line-height:1.6">Your 7 AI agents run on Claude. To use them on your hosted site, you need a free Anthropic API key. This is stored only in your browser — never sent anywhere except directly to Anthropic.</div>
-    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534;margin-bottom:1.25rem;line-height:1.6">
-      1. Go to <strong>console.anthropic.com</strong><br>
-      2. Sign up / log in → click <strong>API Keys</strong><br>
-      3. Click <strong>Create Key</strong> → copy the key (starts with sk-ant-…)<br>
-      4. Paste it below
-    </div>
-    <div style="margin-bottom:1rem">
-      <label style="display:block;font-size:12px;font-weight:500;color:#6b6b74;margin-bottom:4px">Your API key</label>
-      <input id="api-key-input" type="password" value="${existing}" placeholder="sk-ant-api03-..." style="width:100%;padding:10px 12px;border:1px solid #d4d4d0;border-radius:8px;font-size:14px;font-family:monospace;outline:none">
-    </div>
-    <div style="display:flex;gap:10px">
-      <button onclick="saveKey()" style="flex:1;padding:10px;background:#0d6e52;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Save & activate agents</button>
-      ${existing?'<button onclick="document.getElementById(\'key-setup\').remove()" style="padding:10px 16px;border:1px solid #d4d4d0;border-radius:8px;background:none;font-size:14px;cursor:pointer;font-family:inherit">Cancel</button>':''}
-    </div>
-    <div style="margin-top:12px;font-size:11px;color:#a1a1aa;text-align:center">Your key is stored in your browser only. Never shared. Free tier gives ~$5 credit — enough for hundreds of agent conversations.</div>
-  </div>`;
-  document.body.appendChild(wrap);
-  wrap.addEventListener('click',e=>{if(e.target===wrap&&existing)wrap.remove();});
-  setTimeout(()=>{const inp=document.getElementById('api-key-input');if(inp)inp.focus();},100);
-}
-
-function saveKey(){
-  const val=document.getElementById('api-key-input')&&document.getElementById('api-key-input').value.trim();
-  if(!val||!val.startsWith('sk-')){
-    const inp=document.getElementById('api-key-input');
-    if(inp){inp.style.borderColor='#dc2626';inp.placeholder='Must start with sk-ant-...';}
-    return;
-  }
-  localStorage.setItem('firmOS_apiKey',val);
-  const setup=document.getElementById('key-setup');
-  if(setup)setup.remove();
-  showKeyBanner();
-}
-
-function showKeyBanner(){
-  const existing=document.getElementById('key-banner');
-  if(existing)existing.remove();
-  const banner=document.createElement('div');
-  banner.id='key-banner';
-  banner.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0d6e52;color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:9998;font-family:var(--sans);pointer-events:none';
-  banner.textContent='✓ API key saved — all 7 agents are now active';
-  document.body.appendChild(banner);
-  setTimeout(()=>banner.remove(),3000);
-}
-
-async function send(text){
-  text=text||document.getElementById('msg-input').value;
-  if(!text.trim()||!activeId||busy)return;
-  const agent=AGENTS.find(a=>a.id===activeId);
-  if(!chats[activeId])chats[activeId]=[];
-  chats[activeId].push({role:'user',content:text});
-  document.getElementById('msg-input').value='';
-  document.getElementById('msg-input').style.height='auto';
-  document.getElementById('send-btn').disabled=true;
-  setBusy(true);
+async function sendMsg(text) {
+  text = text || document.getElementById('msg-input').value;
+  if (!text.trim() || !activeId || busy) return;
+  var agent = AGENTS.find(function(a) { return a.id === activeId; });
+  if (!chats[activeId]) chats[activeId] = [];
+  chats[activeId].push({role: 'user', content: text});
+  document.getElementById('msg-input').value = '';
+  document.getElementById('msg-input').style.height = 'auto';
+  document.getElementById('send-btn').disabled = true;
+  busy = true;
   renderMessages();
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':localStorage.getItem('firmOS_apiKey')||'',
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
+  renderNav();
+  var key = localStorage.getItem('firmOS_apiKey') || '';
+  if (!key) { showKeySetup(); busy = false; document.getElementById('send-btn').disabled = false; return; }
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
       },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:getSystemPrompt(agent),
-        messages:chats[activeId]
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: buildSystemPrompt(agent),
+        messages: chats[activeId]
       })
     });
-    const data=await res.json();
-    const reply=data.content?.[0]?.text||'Sorry, I had trouble responding. Please try again.';
-    chats[activeId].push({role:'assistant',content:reply});
-  }catch{
-    chats[activeId].push({role:'assistant',content:'Connection issue — please try again in a moment.'});
+    var data = await res.json();
+    var reply = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text : 'Sorry, I had trouble responding. Please try again.';
+    chats[activeId].push({role: 'assistant', content: reply});
+  } catch(e) {
+    chats[activeId].push({role: 'assistant', content: 'Connection issue — please try again in a moment.'});
   }
-  setBusy(false);
+  busy = false;
+  document.getElementById('send-btn').disabled = false;
   renderMessages();
+  renderNav();
 }
 
-function clearChat(){
-  if(activeId){chats[activeId]=[];renderMessages();}
+function showKeySetup() {
+  if (document.getElementById('key-setup')) return;
+  var existing = localStorage.getItem('firmOS_apiKey') || '';
+  var wrap = document.createElement('div');
+  wrap.id = 'key-setup';
+  wrap.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem;font-family:var(--sans)';
+  wrap.innerHTML = '<div style="background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:480px;color:#18181b">'
+    + '<div style="font-size:18px;font-weight:700;margin-bottom:6px">Connect your Anthropic API key</div>'
+    + '<div style="font-size:13px;color:#6b6b74;margin-bottom:1rem;line-height:1.6">Your 7 AI agents run on Claude. To use them on your hosted site, add your Anthropic API key. It is stored only in your browser.</div>'
+    + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534;margin-bottom:1rem;line-height:1.8">'
+    + '1. Go to <strong>console.anthropic.com</strong><br>'
+    + '2. Sign in → click <strong>API Keys</strong><br>'
+    + '3. Click <strong>Create Key</strong> → copy the key<br>'
+    + '4. Paste it below</div>'
+    + '<label style="display:block;font-size:12px;font-weight:500;color:#6b6b74;margin-bottom:4px">Your API key</label>'
+    + '<input id="api-key-input" type="password" value="' + existing + '" placeholder="sk-ant-api03-..." style="width:100%;padding:10px 12px;border:1px solid #d4d4d0;border-radius:8px;font-size:14px;font-family:monospace;outline:none;margin-bottom:1rem">'
+    + '<div style="display:flex;gap:10px">'
+    + '<button onclick="saveKey()" style="flex:1;padding:10px;background:#0d6e52;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">Save and activate agents</button>'
+    + (existing ? '<button onclick="document.getElementById(\'key-setup\').remove()" style="padding:10px 16px;border:1px solid #d4d4d0;border-radius:8px;background:none;font-size:14px;cursor:pointer">Cancel</button>' : '')
+    + '</div>'
+    + '<div style="margin-top:12px;font-size:11px;color:#a1a1aa;text-align:center">Stored in your browser only. Never shared.</div>'
+    + '</div>';
+  document.body.appendChild(wrap);
+  if (existing) { wrap.addEventListener('click', function(e) { if (e.target === wrap) wrap.remove(); }); }
+  setTimeout(function() { var inp = document.getElementById('api-key-input'); if (inp) inp.focus(); }, 100);
 }
 
-// Input handling
-document.getElementById('msg-input').addEventListener('input',function(){
-  this.style.height='auto';
-  this.style.height=Math.min(this.scrollHeight,120)+'px';
-  document.getElementById('send-btn').disabled=!this.value.trim();
-});
-document.getElementById('msg-input').addEventListener('keydown',function(e){
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}
-});
-
-// ── FirmOS client sync
-let FIRM_CLIENTS=[];
-function loadFirmData(){
-  try{
-    const cd=localStorage.getItem('firmOS_clients');
-    if(cd){const p=JSON.parse(cd);FIRM_CLIENTS=p.clients||[];}
-  }catch(e){FIRM_CLIENTS=[];}
-}
-function buildFirmContext(){
-  if(!FIRM_CLIENTS.length)return '';
-  const lines=FIRM_CLIENTS.map(c=>`- ${c.name} | Industry: ${c.industry} | Services: ${(c.services||[]).join(', ')} | MRR: $${c.mrr||0} | States: ${(c.states||[]).join(', ')} | Status: ${c.status}`);
-  return `
-
-YOUR FIRM'S CLIENT ROSTER (from Firm OS — use this when the user references a client by name or asks about a client):
-${lines.join('
-')}
-
-When the user mentions a client by name, use the roster above to give context-aware, specific responses about that client's services, location, and business type. If a specific client is selected, focus your responses on that client's context.`;
-}
-function getSystemPrompt(agent){
-  loadFirmData();
-  const clientCtxEl=document.getElementById('client-ctx');
-  const selId=clientCtxEl?clientCtxEl.value:'';
-  const selClient=FIRM_CLIENTS.find(c=>c.id===selId);
-  let extra=buildFirmContext();
-  if(selClient){
-    extra+=`
-
-ACTIVE CLIENT FOR THIS CONVERSATION: ${selClient.name}
-Industry: ${selClient.industry}
-Services: ${(selClient.services||[]).join(', ')}
-States: ${(selClient.states||[]).join(', ')}
-MRR: $${selClient.mrr||0}
-Status: ${selClient.status}
-
-Focus your responses on this client unless the user specifies otherwise.`;
+function saveKey() {
+  var inp = document.getElementById('api-key-input');
+  var val = inp ? inp.value.trim() : '';
+  if (!val || !val.startsWith('sk-')) {
+    if (inp) { inp.style.borderColor = '#dc2626'; inp.placeholder = 'Must start with sk-ant-...'; }
+    return;
   }
-  return agent.sys+extra;
+  localStorage.setItem('firmOS_apiKey', val);
+  var setup = document.getElementById('key-setup');
+  if (setup) setup.remove();
+  var banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0d6e52;color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:9998;pointer-events:none';
+  banner.textContent = 'API key saved — all 7 agents are now active';
+  document.body.appendChild(banner);
+  setTimeout(function() { banner.remove(); }, 3000);
 }
 
-// ── Add client selector to header
-function buildClientSelector(){
-  loadFirmData();
-  if(!FIRM_CLIENTS.length)return `<span style="font-size:11px;color:var(--txh);padding:4px 8px">No clients — add in Firm OS</span>`;
-  return `<select id="client-ctx" style="padding:5px 10px;border:1px solid var(--bdr2);border-radius:6px;font-size:12px;font-family:var(--sans);background:var(--sur);color:var(--tx);max-width:170px;cursor:pointer"><option value="">All clients</option>${FIRM_CLIENTS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select>`;
-}
+document.getElementById('msg-input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+  document.getElementById('send-btn').disabled = !this.value.trim();
+});
+document.getElementById('msg-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+});
+document.getElementById('send-btn').addEventListener('click', function() { sendMsg(); });
+document.getElementById('send-btn').style.background = '#0d6e52';
+document.getElementById('send-btn').style.color = '#fff';
 
+loadFirmClients();
 renderRoster();
 renderNav();
-// Check for API key on startup
-if(!localStorage.getItem('firmOS_apiKey')){
-  setTimeout(()=>showKeySetup(),600);
+
+if (!localStorage.getItem('firmOS_apiKey')) {
+  setTimeout(function() { showKeySetup(); }, 600);
 }
 </script>
 </body>
