@@ -16,6 +16,8 @@
 body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100vh;display:flex;font-size:14px;line-height:1.6;overflow:hidden}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.95)}}
+@keyframes wave{0%,100%{height:6px}50%{height:16px}}
 #sidebar{width:var(--sbw);background:var(--sb);min-height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;z-index:100;overflow-y:auto}
 .sb-brand{padding:1.25rem 1rem 1rem;border-bottom:1px solid rgba(255,255,255,.07)}
 .sb-back{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.4);text-decoration:none;margin-bottom:.75rem;cursor:pointer}
@@ -38,51 +40,63 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
 .sb-footer{margin-top:auto;padding:1rem;border-top:1px solid rgba(255,255,255,.06)}
 .sb-footer-text{font-size:11px;color:rgba(255,255,255,.2);line-height:1.5}
 #main{margin-left:var(--sbw);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.header{display:flex;align-items:center;gap:14px;padding:14px 24px;background:var(--sur);border-bottom:1px solid var(--bdr);flex-shrink:0;flex-wrap:wrap}
-.h-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.header{display:flex;align-items:center;gap:12px;padding:12px 20px;background:var(--sur);border-bottom:1px solid var(--bdr);flex-shrink:0;flex-wrap:wrap}
+.h-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
 .h-name{font-size:15px;font-weight:600;color:var(--tx)}
 .h-status{font-size:12px;color:var(--txm);margin-top:1px}
-.h-actions{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.btn{padding:5px 14px;border:1px solid var(--bdr2);border-radius:var(--rs);background:var(--sur);font-size:12px;color:var(--txm);cursor:pointer;font-family:var(--sans);transition:all .12s}
+.h-actions{margin-left:auto;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.btn{padding:5px 12px;border:1px solid var(--bdr2);border-radius:var(--rs);background:var(--sur);font-size:12px;color:var(--txm);cursor:pointer;font-family:var(--sans);transition:all .12s;white-space:nowrap}
 .btn:hover{background:var(--bg)}
-.messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px;background:var(--bg)}
+.btn.active-voice{background:#f0fdf4;border-color:#4ade80;color:#166534}
+.messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;background:var(--bg)}
 .msg{display:flex;align-items:flex-start;gap:10px;animation:fadeIn .2s ease}
 .msg.you{flex-direction:row-reverse}
 .msg-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px}
 .you .msg-av{background:#3f3f46}
-.bubble{max-width:70%;padding:10px 14px;font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.msg-content{display:flex;flex-direction:column;gap:4px;max-width:70%}
+.you .msg-content{align-items:flex-end}
+.bubble{padding:10px 14px;font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
 .bubble.agent{background:var(--sur);border:1px solid var(--bdr);border-radius:4px 14px 14px 14px;color:var(--tx)}
 .bubble.you{color:#fff;border-radius:14px 4px 14px 14px}
+.voice-bar{display:flex;align-items:center;gap:8px;padding:2px 0}
+.speak-btn{display:flex;align-items:center;gap:5px;padding:3px 10px;border:1px solid var(--bdr2);border-radius:20px;background:none;cursor:pointer;font-size:11px;color:var(--txm);font-family:var(--sans);transition:all .12s}
+.speak-btn:hover{background:var(--bg);color:var(--tx)}
+.speak-btn.speaking{border-color:var(--agent-clr,#0d6e52);color:var(--agent-clr,#0d6e52);background:#f0fdf4;animation:pulse 1.4s ease infinite}
+.waveform{display:flex;align-items:center;gap:2px;height:18px}
+.wv{width:3px;border-radius:2px;background:var(--agent-clr,#0d6e52);animation:wave .8s ease infinite}
+.wv:nth-child(2){animation-delay:.15s}
+.wv:nth-child(3){animation-delay:.3s}
+.wv:nth-child(4){animation-delay:.15s}
 .typing{display:flex;align-items:center;gap:5px;padding:12px 14px;background:var(--sur);border:1px solid var(--bdr);border-radius:4px 14px 14px 14px}
 .td{width:7px;height:7px;border-radius:50%;background:#ccc;animation:bounce .9s infinite}
-.input-area{padding:14px 24px 18px;background:var(--sur);border-top:1px solid var(--bdr);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
+.input-area{padding:12px 20px 16px;background:var(--sur);border-top:1px solid var(--bdr);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
 #msg-input{flex:1;padding:10px 14px;border:1px solid var(--bdr2);border-radius:var(--r);font-size:14px;font-family:var(--sans);resize:none;outline:none;line-height:1.55;color:var(--tx);min-height:44px;max-height:120px;overflow:auto;transition:border-color .15s}
-#send-btn{padding:10px 22px;border-radius:var(--r);border:none;font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0;font-family:var(--sans);transition:all .15s}
+#send-btn{padding:10px 20px;border-radius:var(--r);border:none;font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0;font-family:var(--sans);transition:all .15s;background:#0d6e52;color:#fff}
 #send-btn:disabled{background:var(--bdr2);color:var(--txh);cursor:default}
 #send-btn:not(:disabled):hover{filter:brightness(1.08)}
-.roster{flex:1;overflow-y:auto;padding:32px;background:var(--bg)}
-.roster-header{margin-bottom:28px}
+.roster{flex:1;overflow-y:auto;padding:28px;background:var(--bg)}
+.roster-header{margin-bottom:24px}
 .roster-title{font-size:24px;font-weight:700;letter-spacing:-.02em;color:var(--tx);margin-bottom:6px}
 .roster-sub{font-size:14px;color:var(--txm);line-height:1.6;max-width:520px}
-.roster-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.ag-card{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:20px 22px;cursor:pointer;transition:all .15s}
-.ag-card:hover{transform:translateY(-1px)}
-.ag-card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.roster-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px}
+.ag-card{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:18px 20px;cursor:pointer;transition:all .15s}
+.ag-card:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.ag-card-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .ag-card-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff}
 .ag-card-name{font-size:15px;font-weight:700;color:var(--tx)}
 .ag-card-role{font-size:12px;font-weight:600}
-.ag-card-desc{font-size:13px;color:var(--txm);line-height:1.6;margin-bottom:14px}
-.quick-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
-.quick-tag{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
-.ag-card-btn{padding:7px 16px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.ag-card-desc{font-size:13px;color:var(--txm);line-height:1.6;margin-bottom:12px}
+.quick-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.quick-tag{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500}
+.ag-card-btn{padding:7px 14px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)}
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 20px;text-align:center}
-.empty-av{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;margin:0 auto 16px}
-.empty-title{font-size:17px;font-weight:600;color:var(--tx);margin-bottom:8px}
-.empty-sub{font-size:13px;color:var(--txh);max-width:320px;line-height:1.6;margin-bottom:20px}
-.quick-starters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.qs-btn{padding:8px 16px;border-radius:22px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--sans)}
+.empty-av{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;margin:0 auto 14px}
+.empty-title{font-size:17px;font-weight:600;color:var(--tx);margin-bottom:6px}
+.empty-sub{font-size:13px;color:var(--txh);max-width:320px;line-height:1.6;margin-bottom:18px}
+.quick-starters{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.qs-btn{padding:7px 14px;border-radius:22px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--sans)}
 .qs-btn:hover{opacity:.85}
-.client-sel{padding:5px 10px;border:1px solid var(--bdr2);border-radius:6px;font-size:12px;font-family:var(--sans);background:var(--sur);color:var(--tx);max-width:170px;cursor:pointer}
+.client-sel{padding:5px 10px;border:1px solid var(--bdr2);border-radius:6px;font-size:12px;font-family:var(--sans);background:var(--sur);color:var(--tx);max-width:160px;cursor:pointer}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -101,7 +115,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
   </div>
   <div class="sb-footer">
     <button onclick="showKeySetup()" style="width:100%;padding:7px 12px;border:1px solid rgba(255,255,255,.15);border-radius:7px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;font-family:var(--sans);margin-bottom:10px">&#9881; API key settings</button>
-    <div class="sb-footer-text">Each agent trained on their domain. Powered by Claude AI.</div>
+    <div class="sb-footer-text">Each agent trained on their domain.<br>Voice powered by your browser.<br>AI powered by Claude.</div>
   </div>
 </aside>
 
@@ -109,7 +123,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
   <div id="view-roster" class="roster">
     <div class="roster-header">
       <div class="roster-title">Your AI workforce</div>
-      <div class="roster-sub">7 specialist agents, available 24/7. Each trained on their domain. Select a client from the dropdown inside any chat to give your agent full context about who they are working with.</div>
+      <div class="roster-sub">7 specialist agents with voice. Each agent speaks in their own voice. Select a client in any chat for full context. Use the speaker button on any response to hear it read aloud.</div>
     </div>
     <div class="roster-grid" id="roster-grid"></div>
   </div>
@@ -126,58 +140,119 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
 <script>
 var AGENTS = [
   {id:'alex', name:'Alex Chen', role:'Senior Bookkeeper', initials:'AC', color:'#0d6e52', lightBg:'#e0f5ef', darkTxt:'#08503c',
+   voice:{rate:0.94, pitch:0.95, pref:['Daniel','Google UK English Male','Microsoft David','Alex']},
    desc:'QBO expert. Handles reconciliations, transaction categorization, bank rules, and month-end close.',
    quick:['Walk me through reconciling a discrepancy','How do I set up a QBO bank rule?','My books do not balance — help me find the issue','Give me a month-end close checklist'],
-   sys:'You are Alex Chen, a senior bookkeeper with 15 years of QuickBooks Online experience at a solo CPA firm. Help the firm owner with bookkeeping tasks, QBO troubleshooting, bank reconciliations, transaction categorization, bank rule setup, and month-end close. Be concise and practical. Use numbered steps. Mention exact QBO menu paths when relevant (e.g. Accounting → Reconcile).'},
+   sys:'You are Alex Chen, a senior bookkeeper with 15 years of QuickBooks Online experience at a solo CPA firm. Help the firm owner with bookkeeping tasks, QBO troubleshooting, bank reconciliations, transaction categorization, bank rule setup, and month-end close. Be concise and practical. Use numbered steps. Mention exact QBO menu paths when relevant such as Accounting then Reconcile.'},
   {id:'morgan', name:'Morgan Park', role:'Tax Strategist', initials:'MP', color:'#534AB7', lightBg:'#EEEDFE', darkTxt:'#3C3489',
+   voice:{rate:0.90, pitch:0.88, pref:['Google UK English Female','Samantha','Microsoft Zira','Karen']},
    desc:'CPA with deep small-business tax expertise. Planning memos, estimated payments, deductions, S-Corp strategy.',
    quick:['Calculate my client Q2 estimated tax payment','What deductions is my construction client missing?','Draft a tax planning memo for an S-Corp client','Analyze salary vs distribution for an S-Corp owner'],
-   sys:'You are Morgan Park, a CPA and tax strategist at a solo accounting firm. You specialize in small business tax planning, estimated quarterly payments, S-Corp elections and salary/distribution optimization, retirement plan contributions (SEP-IRA, Solo 401k, SIMPLE IRA), Section 179 and bonus depreciation, QBI deductions, and year-end tax strategy. Be specific and practical. Always note guidance is for planning purposes only.'},
+   sys:'You are Morgan Park, a CPA and tax strategist at a solo accounting firm. You specialize in small business tax planning, estimated quarterly payments, S-Corp elections and salary/distribution optimization, retirement plan contributions, Section 179 and bonus depreciation, QBI deductions, and year-end tax strategy. Be specific and practical. Always note guidance is for planning purposes only.'},
   {id:'jordan', name:'Jordan Ellis', role:'Client Relations', initials:'JE', color:'#993556', lightBg:'#FBEAF0', darkTxt:'#72243E',
+   voice:{rate:1.02, pitch:1.15, pref:['Google US English Female','Samantha','Microsoft Zira','Victoria']},
    desc:'Drafts all client-facing communications — emails, financial narratives, meeting follow-ups, deadline notices.',
    quick:['Draft a monthly document request email','Write a financial narrative for a restaurant client','Compose a Q1 tax deadline reminder','Create a quarterly review meeting invite'],
    sys:'You are Jordan Ellis, a client communications specialist at a solo accounting firm. You draft professional, warm, and clear emails and client-facing documents. Style: professional but approachable, jargon-free, action-oriented, concise. For emails always include: subject line, brief context, key ask, warm sign-off. Produce complete ready-to-send emails — not templates with blanks.'},
   {id:'riley', name:'Riley Torres', role:'Compliance Officer', initials:'RT', color:'#854F0B', lightBg:'#FAEEDA', darkTxt:'#633806',
+   voice:{rate:0.91, pitch:0.92, pref:['Google US English Male','Daniel','Microsoft David','Fred']},
    desc:'Sales tax nexus, payroll compliance, EFTPS deposits, 1099s, and multi-state issues.',
    quick:['Does my client have nexus in California?','What is the EFTPS deposit schedule for a new employer?','Review my client multi-state payroll exposure','1099-NEC filing requirements and deadlines'],
-   sys:'You are Riley Torres, a compliance specialist at a solo accounting firm. Expert in: sales tax economic nexus (post-Wayfair), state thresholds and registration, payroll tax compliance (federal/state withholding, FICA, FUTA, SUTA), EFTPS deposit schedules, 1099-NEC and W-2 preparation, and multi-state payroll. Give practical, actionable guidance. Always remind users to verify current thresholds with each state revenue department.'},
+   sys:'You are Riley Torres, a compliance specialist at a solo accounting firm. Expert in: sales tax economic nexus post-Wayfair, state thresholds and registration, payroll tax compliance including federal and state withholding, FICA, FUTA, SUTA, EFTPS deposit schedules, 1099-NEC and W-2 preparation, and multi-state payroll. Give practical, actionable guidance. Always remind users to verify current thresholds with each state revenue department.'},
   {id:'sam', name:'Sam Okafor', role:'CFO Analyst', initials:'SO', color:'#185FA5', lightBg:'#E6F1FB', darkTxt:'#0C447C',
+   voice:{rate:0.96, pitch:1.0, pref:['Google UK English Male','Daniel','Microsoft David','Alex']},
    desc:'Fractional CFO-level insights. KPI analysis, industry benchmarks, cash flow, and strategic recommendations.',
    quick:['Analyze these monthly financials for a restaurant','How does my client compare to industry benchmarks?','My client cash is shrinking — what is happening?','Give me a business health score from these numbers'],
-   sys:'You are Sam Okafor, a fractional CFO analyst at a solo accounting firm. When given financial data: (1) identify the 2-3 most important insights; (2) compare to industry benchmarks; (3) flag risks or anomalies; (4) suggest 1-2 specific actionable recommendations; (5) use plain language for business owners. Industries you know well: restaurants, construction, professional services, retail, SaaS. Be direct.'},
+   sys:'You are Sam Okafor, a fractional CFO analyst at a solo accounting firm. When given financial data: identify the 2 to 3 most important insights, compare to industry benchmarks, flag risks or anomalies, suggest 1 to 2 specific actionable recommendations, and use plain language for business owners. Industries you know well: restaurants, construction, professional services, retail, SaaS. Be direct.'},
   {id:'casey', name:'Casey Morgan', role:'Report and SOP Writer', initials:'CM', color:'#3B6D11', lightBg:'#EAF3DE', darkTxt:'#27500A',
+   voice:{rate:0.98, pitch:1.08, pref:['Samantha','Google US English Female','Microsoft Zira','Karen']},
    desc:'Creates financial narratives, detailed SOPs, engagement letters, and client education content.',
    quick:['Write a month-end financial narrative for a retail client','Create a full SOP for bank reconciliation in QBO','Draft an engagement letter for monthly bookkeeping','Write a client newsletter on Q2 tax planning tips'],
-   sys:'You are Casey Morgan, a financial writer at a solo accounting firm. You create: monthly financial narrative summaries (explain numbers in business terms), detailed SOPs with specific numbered steps using exact QBO menu paths, engagement letters, and client-facing educational content. For clients: completely jargon-free, explain implications, suggest actions. For SOPs: precise, technical, step-by-step. Always produce complete usable output.'},
+   sys:'You are Casey Morgan, a financial writer at a solo accounting firm. You create monthly financial narrative summaries that explain numbers in business terms, detailed SOPs with specific numbered steps using exact QBO menu paths, engagement letters, and client-facing educational content. For clients: completely jargon-free, explain implications, suggest actions. For SOPs: precise, technical, step-by-step. Always produce complete usable output.'},
   {id:'drew', name:'Drew Rivera', role:'Payroll Specialist', initials:'DR', color:'#A32D2D', lightBg:'#FCEBEB', darkTxt:'#791F1F',
+   voice:{rate:0.93, pitch:0.97, pref:['Google US English Male','Alex','Microsoft David','Daniel']},
    desc:'Payroll processing, tax withholding, EFTPS, new hire setup, and year-end W-2 preparation.',
    quick:['Walk me through processing payroll in QBO','New hire setup checklist — what do I need?','How do I handle a garnishment in payroll?','Year-end W-2 preparation steps'],
-   sys:'You are Drew Rivera, a payroll specialist at a solo accounting firm. Expert in: payroll processing in QBO Payroll and Gusto, federal and state payroll tax withholding (income tax, FICA, FUTA, SUTA), EFTPS deposit schedules, new hire onboarding (W-4, I-9, direct deposit, state new hire reporting), garnishments and wage levies, retirement plan deductions, year-end W-2 and 1099 preparation, and payroll journal entries in QBO. Give step-by-step guidance. Flag compliance risks immediately.'}
+   sys:'You are Drew Rivera, a payroll specialist at a solo accounting firm. Expert in: payroll processing in QBO Payroll and Gusto, federal and state payroll tax withholding, FICA, FUTA, SUTA, EFTPS deposit schedules, new hire onboarding including W-4, I-9, direct deposit, state new hire reporting, garnishments and wage levies, retirement plan deductions, year-end W-2 and 1099 preparation, and payroll journal entries in QBO. Give step-by-step guidance. Flag compliance risks immediately.'}
 ];
 
 var chats = {};
 var activeId = null;
 var busy = false;
+var autoSpeak = false;
+var currentUtterance = null;
+var speakingMsgIdx = -1;
 var FIRM_CLIENTS = [];
+var allVoices = [];
 
+// ── Voice engine
+function loadVoices() {
+  allVoices = window.speechSynthesis.getVoices();
+}
+loadVoices();
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function pickVoice(agent) {
+  if (!allVoices.length) allVoices = window.speechSynthesis.getVoices();
+  var prefs = agent.voice.pref;
+  for (var i = 0; i < prefs.length; i++) {
+    var found = allVoices.find(function(v) { return v.name.indexOf(prefs[i]) >= 0; });
+    if (found) return found;
+  }
+  // fallback: first English voice
+  return allVoices.find(function(v) { return v.lang && v.lang.startsWith('en'); }) || allVoices[0] || null;
+}
+
+function stopSpeaking() {
+  window.speechSynthesis.cancel();
+  speakingMsgIdx = -1;
+  currentUtterance = null;
+  renderMessages();
+}
+
+function speakMessage(text, agentId, msgIdx) {
+  if (!window.speechSynthesis) { alert('Your browser does not support text-to-speech. Try Chrome or Edge.'); return; }
+  var agent = AGENTS.find(function(a) { return a.id === agentId; });
+  if (!agent) return;
+  window.speechSynthesis.cancel();
+  // Clean markdown from text
+  var clean = text
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/#+\s/g, '')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+  var utt = new SpeechSynthesisUtterance(clean);
+  var v = pickVoice(agent);
+  if (v) utt.voice = v;
+  utt.rate = agent.voice.rate;
+  utt.pitch = agent.voice.pitch;
+  utt.volume = 1;
+  speakingMsgIdx = msgIdx;
+  currentUtterance = utt;
+  utt.onstart = function() { renderMessages(); };
+  utt.onend = function() { speakingMsgIdx = -1; currentUtterance = null; renderMessages(); };
+  utt.onerror = function() { speakingMsgIdx = -1; currentUtterance = null; renderMessages(); };
+  window.speechSynthesis.speak(utt);
+  renderMessages();
+}
+
+// ── FirmOS client sync
 function loadFirmClients() {
   try {
     var raw = localStorage.getItem('firmOS_clients');
-    if (raw) {
-      var parsed = JSON.parse(raw);
-      FIRM_CLIENTS = parsed.clients || [];
-    }
-  } catch(e) {
-    FIRM_CLIENTS = [];
-  }
+    if (raw) { var p = JSON.parse(raw); FIRM_CLIENTS = p.clients || []; }
+  } catch(e) { FIRM_CLIENTS = []; }
 }
 
 function buildClientContext() {
   if (!FIRM_CLIENTS.length) return '';
   var lines = FIRM_CLIENTS.map(function(c) {
-    return '- ' + c.name + ' | Industry: ' + c.industry + ' | Services: ' + (c.services || []).join(', ') + ' | MRR: $' + (c.mrr || 0) + ' | States: ' + (c.states || []).join(', ') + ' | Status: ' + c.status;
+    return '- ' + c.name + ' | Industry: ' + c.industry + ' | Services: ' + (c.services||[]).join(', ') + ' | MRR: $' + (c.mrr||0) + ' | States: ' + (c.states||[]).join(', ') + ' | Status: ' + c.status;
   });
-  return '\n\nYOUR FIRM CLIENT ROSTER (from Firm OS):\n' + lines.join('\n') + '\n\nWhen the user mentions a client name, use this roster to give context-aware responses about that client.';
+  return '\n\nYOUR FIRM CLIENT ROSTER (from Firm OS — use when user mentions a client name):\n' + lines.join('\n') + '\n\nUse the roster to give context-aware responses about each client.';
 }
 
 function getSelectedClient() {
@@ -189,47 +264,35 @@ function getSelectedClient() {
 function buildSystemPrompt(agent) {
   loadFirmClients();
   var base = agent.sys + buildClientContext();
-  var selected = getSelectedClient();
-  if (selected) {
-    base += '\n\nACTIVE CLIENT: ' + selected.name + ' | Industry: ' + selected.industry + ' | Services: ' + (selected.services || []).join(', ') + ' | States: ' + (selected.states || []).join(', ') + ' | MRR: $' + (selected.mrr || 0) + '. Focus responses on this client.';
+  var sel = getSelectedClient();
+  if (sel) {
+    base += '\n\nACTIVE CLIENT: ' + sel.name + ' | Industry: ' + sel.industry + ' | Services: ' + (sel.services||[]).join(', ') + ' | States: ' + (sel.states||[]).join(', ') + ' | MRR: $' + (sel.mrr||0) + '. Focus responses on this client.';
   }
   return base;
 }
 
 function buildClientSelector() {
   loadFirmClients();
-  if (!FIRM_CLIENTS.length) {
-    return '<span style="font-size:11px;color:var(--txh);padding:4px 8px">Add clients in Firm OS</span>';
-  }
-  var opts = FIRM_CLIENTS.map(function(c) {
-    return '<option value="' + c.id + '">' + c.name + '</option>';
-  }).join('');
+  if (!FIRM_CLIENTS.length) return '<span style="font-size:11px;color:var(--txh);padding:4px 0">Add clients in Firm OS</span>';
+  var opts = FIRM_CLIENTS.map(function(c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('');
   return '<select class="client-sel" id="client-ctx"><option value="">All clients</option>' + opts + '</select>';
 }
 
-function totalTasks(id) { return (chats[id] || []).filter(function(m) { return m.role === 'user'; }).length; }
-
-function agentColor(id) {
-  var a = AGENTS.find(function(x) { return x.id === id; });
-  return a ? a.color : '#0d6e52';
-}
-
-function setTheme(color) {
-  document.documentElement.style.setProperty('--agent-color', color);
-}
+// ── Nav & roster
+function totalTasks(id) { return (chats[id]||[]).filter(function(m){return m.role==='user';}).length; }
 
 function renderNav() {
-  var active = AGENTS.filter(function(a) { return totalTasks(a.id) > 0; }).length;
+  var active = AGENTS.filter(function(a){return totalTasks(a.id)>0;}).length;
   document.getElementById('sb-sub').textContent = '7 agents · ' + active + ' active today';
   document.getElementById('nav-agents').innerHTML = AGENTS.map(function(a) {
     var on = activeId === a.id;
     var tasks = totalTasks(a.id);
     var isBusy = busy && activeId === a.id;
-    return '<button class="nav ' + (on ? 'on' : '') + '" style="--agent-color:' + a.color + '" onclick="openChat(\'' + a.id + '\')">'
+    return '<button class="nav ' + (on?'on':'') + '" style="--agent-color:' + a.color + '" onclick="openChat(\'' + a.id + '\')">'
       + '<div class="nav-av" style="background:' + a.color + '">' + a.initials + '</div>'
       + '<div class="nav-info"><div class="nav-name">' + a.name.split(' ')[0] + '</div><div class="nav-role">' + a.role + '</div></div>'
       + (tasks > 0 ? '<div class="nav-badge">' + tasks + '</div>' : '')
-      + '<div class="nav-status" style="background:' + (isBusy ? '#f59e0b' : '#4ade80') + '"></div>'
+      + '<div class="nav-status" style="background:' + (isBusy?'#f59e0b':'#4ade80') + '"></div>'
       + '</button>';
   }).join('');
 }
@@ -237,41 +300,62 @@ function renderNav() {
 function renderRoster() {
   document.getElementById('roster-grid').innerHTML = AGENTS.map(function(a) {
     var tasks = totalTasks(a.id);
-    return '<div class="ag-card" style="--agent-color:' + a.color + '" onclick="openChat(\'' + a.id + '\')">'
+    return '<div class="ag-card" onclick="openChat(\'' + a.id + '\')">'
       + '<div class="ag-card-top">'
       + '<div class="ag-card-av" style="background:' + a.color + '">' + a.initials + '</div>'
       + '<div><div class="ag-card-name">' + a.name + '</div><div class="ag-card-role" style="color:' + a.color + '">' + a.role + '</div></div>'
-      + (tasks > 0 ? '<div style="margin-left:auto;background:' + a.lightBg + ';color:' + a.darkTxt + ';font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px">' + tasks + ' task' + (tasks !== 1 ? 's' : '') + '</div>' : '')
+      + (tasks > 0 ? '<div style="margin-left:auto;background:' + a.lightBg + ';color:' + a.darkTxt + ';font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px">' + tasks + ' task' + (tasks!==1?'s':'') + '</div>' : '')
       + '</div>'
       + '<div class="ag-card-desc">' + a.desc + '</div>'
-      + '<div class="quick-tags">' + a.quick.slice(0, 2).map(function(q) { return '<span class="quick-tag" style="background:' + a.lightBg + ';color:' + a.darkTxt + '">' + (q.length > 36 ? q.slice(0, 36) + '...' : q) + '</span>'; }).join('') + '</div>'
-      + '<button class="ag-card-btn" style="background:' + a.color + ';color:#fff">' + (tasks > 0 ? 'Continue' : 'Start chat') + ' →</button>'
+      + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">'
+      + '<div style="width:22px;height:22px;border-radius:50%;background:' + a.lightBg + ';display:flex;align-items:center;justify-content:center;font-size:11px">&#128362;</div>'
+      + '<span style="font-size:11px;color:' + a.darkTxt + ';font-weight:500">Voice enabled</span>'
+      + '</div>'
+      + '<div class="quick-tags">' + a.quick.slice(0,2).map(function(q){return '<span class="quick-tag" style="background:' + a.lightBg + ';color:' + a.darkTxt + '">' + (q.length>36?q.slice(0,36)+'...':q) + '</span>';}).join('') + '</div>'
+      + '<button class="ag-card-btn" style="background:' + a.color + ';color:#fff">' + (tasks>0?'Continue':'Start chat') + ' →</button>'
       + '</div>';
   }).join('');
 }
 
+// ── Chat
 function openChat(id) {
+  stopSpeaking();
   activeId = id;
-  var agent = AGENTS.find(function(a) { return a.id === id; });
-  setTheme(agent.color);
+  var agent = AGENTS.find(function(a){return a.id===id;});
+  document.documentElement.style.setProperty('--agent-color', agent.color);
   document.getElementById('view-roster').style.display = 'none';
   var vc = document.getElementById('view-chat');
   vc.style.display = 'flex';
-  document.getElementById('chat-header').innerHTML =
-    '<div class="h-av" style="background:' + agent.color + '">' + agent.initials + '</div>'
-    + '<div><div class="h-name">' + agent.name + '</div>'
-    + '<div class="h-status"><span style="color:' + (busy ? '#f59e0b' : '#4ade80') + '">&#9679;</span> ' + (busy ? 'Working...' : 'Available — ' + agent.role) + '</div></div>'
-    + '<div class="h-actions">'
-    + buildClientSelector()
-    + '<button class="btn" onclick="clearChat()">Clear</button>'
-    + '<button class="btn" onclick="showRoster()">&#8592; Team</button>'
-    + '</div>';
+  renderHeader(agent);
   renderMessages();
   renderNav();
   document.getElementById('msg-input').focus();
 }
 
+function renderHeader(agent) {
+  if (!agent) { agent = AGENTS.find(function(a){return a.id===activeId;}); }
+  document.getElementById('chat-header').innerHTML =
+    '<div class="h-av" style="background:' + agent.color + '">' + agent.initials + '</div>'
+    + '<div><div class="h-name">' + agent.name + '</div>'
+    + '<div class="h-status"><span style="color:' + (busy?'#f59e0b':'#4ade80') + '">&#9679;</span> '
+    + (busy ? 'Working...' : 'Available — ' + agent.role) + '</div></div>'
+    + '<div class="h-actions">'
+    + buildClientSelector()
+    + '<button class="btn ' + (autoSpeak?'active-voice':'') + '" id="auto-speak-btn" onclick="toggleAutoSpeak()" title="Auto-read responses aloud">&#128362; ' + (autoSpeak?'Voice on':'Voice off') + '</button>'
+    + (window.speechSynthesis && window.speechSynthesis.speaking ? '<button class="btn" onclick="stopSpeaking()" style="color:#dc2626;border-color:#dc2626">&#9646;&#9646; Stop</button>' : '')
+    + '<button class="btn" onclick="clearChat()">Clear</button>'
+    + '<button class="btn" onclick="showRoster()">&#8592; Team</button>'
+    + '</div>';
+}
+
+function toggleAutoSpeak() {
+  autoSpeak = !autoSpeak;
+  var agent = AGENTS.find(function(a){return a.id===activeId;});
+  if (agent) renderHeader(agent);
+}
+
 function showRoster() {
+  stopSpeaking();
   activeId = null;
   document.getElementById('view-roster').style.display = 'block';
   document.getElementById('view-chat').style.display = 'none';
@@ -280,47 +364,76 @@ function showRoster() {
 }
 
 function clearChat() {
+  stopSpeaking();
   if (activeId) { chats[activeId] = []; renderMessages(); }
 }
 
 function esc(t) {
-  return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function renderMessages() {
   if (!activeId) return;
-  var agent = AGENTS.find(function(a) { return a.id === activeId; });
+  var agent = AGENTS.find(function(a){return a.id===activeId;});
   var msgs = chats[activeId] || [];
   var container = document.getElementById('messages');
+  var isSpeaking = window.speechSynthesis && window.speechSynthesis.speaking;
+
   if (msgs.length === 0) {
     container.innerHTML = '<div class="empty">'
       + '<div class="empty-av" style="background:' + agent.lightBg + ';color:' + agent.color + '">' + agent.initials + '</div>'
       + '<div class="empty-title">Hi, I\'m ' + agent.name.split(' ')[0] + '</div>'
-      + '<div class="empty-sub">' + agent.desc + ' Ask me anything or pick a quick task below.</div>'
-      + '<div class="quick-starters">' + agent.quick.map(function(q) { return '<button class="qs-btn" style="background:' + agent.lightBg + ';color:' + agent.darkTxt + '" onclick="sendMsg(' + JSON.stringify(q) + ')">' + q + '</button>'; }).join('') + '</div>'
+      + '<div class="empty-sub">' + agent.desc + ' Use the speaker button on any response to hear it read aloud.</div>'
+      + '<div class="quick-starters">' + agent.quick.map(function(q){return '<button class="qs-btn" style="background:' + agent.lightBg + ';color:' + agent.darkTxt + '" onclick="sendMsg(' + JSON.stringify(q) + ')">' + q + '</button>';}).join('') + '</div>'
       + '</div>';
     return;
   }
-  container.innerHTML = msgs.map(function(m) {
+
+  var html = '';
+  msgs.forEach(function(m, idx) {
     var isYou = m.role === 'user';
-    return '<div class="msg ' + (isYou ? 'you' : '') + '">'
-      + '<div class="msg-av" style="background:' + (isYou ? '#3f3f46' : agent.color) + '">' + (isYou ? 'YOU' : agent.initials) + '</div>'
-      + '<div class="bubble ' + (isYou ? 'you' : 'agent') + '" style="' + (isYou ? 'background:' + agent.color : '') + '">' + esc(m.content) + '</div>'
-      + '</div>';
-  }).join('');
+    var isThisSpeaking = isSpeaking && speakingMsgIdx === idx;
+    if (isYou) {
+      html += '<div class="msg you">'
+        + '<div class="msg-av" style="background:#3f3f46">YOU</div>'
+        + '<div class="msg-content"><div class="bubble you" style="background:' + agent.color + '">' + esc(m.content) + '</div></div>'
+        + '</div>';
+    } else {
+      var speakBtnHtml = '';
+      if (window.speechSynthesis) {
+        if (isThisSpeaking) {
+          speakBtnHtml = '<div class="voice-bar">'
+            + '<button class="speak-btn speaking" style="--agent-clr:' + agent.color + '" onclick="stopSpeaking()">'
+            + '<div class="waveform" style="--agent-clr:' + agent.color + '"><div class="wv"></div><div class="wv"></div><div class="wv"></div><div class="wv"></div></div>'
+            + 'Speaking... (click to stop)</button></div>';
+        } else {
+          speakBtnHtml = '<div class="voice-bar">'
+            + '<button class="speak-btn" onclick="speakMessage(' + JSON.stringify(m.content) + ',\'' + agent.id + '\',' + idx + ')" style="color:' + agent.color + ';border-color:' + agent.color + '33">'
+            + '&#128362; Hear ' + agent.name.split(' ')[0] + '</button></div>';
+        }
+      }
+      html += '<div class="msg">'
+        + '<div class="msg-av" style="background:' + agent.color + '">' + agent.initials + '</div>'
+        + '<div class="msg-content"><div class="bubble agent">' + esc(m.content) + '</div>' + speakBtnHtml + '</div>'
+        + '</div>';
+    }
+  });
+
   if (busy) {
-    container.innerHTML += '<div class="msg"><div class="msg-av" style="background:' + agent.color + '">' + agent.initials + '</div>'
+    html += '<div class="msg"><div class="msg-av" style="background:' + agent.color + '">' + agent.initials + '</div>'
       + '<div class="typing"><div class="td" style="animation-delay:0s"></div><div class="td" style="animation-delay:.18s"></div><div class="td" style="animation-delay:.36s"></div></div></div>';
   }
+  container.innerHTML = html;
   container.scrollTop = container.scrollHeight;
 }
 
+// ── Send
 async function sendMsg(text) {
   text = text || document.getElementById('msg-input').value;
   if (!text.trim() || !activeId || busy) return;
-  var agent = AGENTS.find(function(a) { return a.id === activeId; });
+  var agent = AGENTS.find(function(a){return a.id===activeId;});
   if (!chats[activeId]) chats[activeId] = [];
-  chats[activeId].push({role: 'user', content: text});
+  chats[activeId].push({role:'user', content:text});
   document.getElementById('msg-input').value = '';
   document.getElementById('msg-input').style.height = 'auto';
   document.getElementById('send-btn').disabled = true;
@@ -347,16 +460,27 @@ async function sendMsg(text) {
     });
     var data = await res.json();
     var reply = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text : 'Sorry, I had trouble responding. Please try again.';
-    chats[activeId].push({role: 'assistant', content: reply});
+    chats[activeId].push({role:'assistant', content:reply});
+    busy = false;
+    renderMessages();
+    renderNav();
+    var agent2 = AGENTS.find(function(a){return a.id===activeId;});
+    if (agent2) renderHeader(agent2);
+    // Auto-speak if enabled
+    if (autoSpeak && reply) {
+      var newIdx = chats[activeId].length - 1;
+      setTimeout(function() { speakMessage(reply, activeId, newIdx); }, 300);
+    }
   } catch(e) {
-    chats[activeId].push({role: 'assistant', content: 'Connection issue — please try again in a moment.'});
+    chats[activeId].push({role:'assistant', content:'Connection issue — please try again in a moment.'});
+    busy = false;
+    renderMessages();
+    renderNav();
   }
-  busy = false;
   document.getElementById('send-btn').disabled = false;
-  renderMessages();
-  renderNav();
 }
 
+// ── API key
 function showKeySetup() {
   if (document.getElementById('key-setup')) return;
   var existing = localStorage.getItem('firmOS_apiKey') || '';
@@ -365,30 +489,26 @@ function showKeySetup() {
   wrap.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem;font-family:var(--sans)';
   wrap.innerHTML = '<div style="background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:480px;color:#18181b">'
     + '<div style="font-size:18px;font-weight:700;margin-bottom:6px">Connect your Anthropic API key</div>'
-    + '<div style="font-size:13px;color:#6b6b74;margin-bottom:1rem;line-height:1.6">Your 7 AI agents run on Claude. To use them on your hosted site, add your Anthropic API key. It is stored only in your browser.</div>'
+    + '<div style="font-size:13px;color:#6b6b74;margin-bottom:1rem;line-height:1.6">Your 7 AI agents run on Claude. To use them on your hosted site, add your Anthropic API key. Stored only in your browser.</div>'
     + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534;margin-bottom:1rem;line-height:1.8">'
-    + '1. Go to <strong>console.anthropic.com</strong><br>'
-    + '2. Sign in → click <strong>API Keys</strong><br>'
-    + '3. Click <strong>Create Key</strong> → copy the key<br>'
-    + '4. Paste it below</div>'
+    + '1. Go to <strong>console.anthropic.com</strong><br>2. Sign in → click <strong>API Keys</strong><br>3. Click <strong>Create Key</strong> → copy it<br>4. Paste it below</div>'
     + '<label style="display:block;font-size:12px;font-weight:500;color:#6b6b74;margin-bottom:4px">Your API key</label>'
     + '<input id="api-key-input" type="password" value="' + existing + '" placeholder="sk-ant-api03-..." style="width:100%;padding:10px 12px;border:1px solid #d4d4d0;border-radius:8px;font-size:14px;font-family:monospace;outline:none;margin-bottom:1rem">'
     + '<div style="display:flex;gap:10px">'
     + '<button onclick="saveKey()" style="flex:1;padding:10px;background:#0d6e52;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">Save and activate agents</button>'
     + (existing ? '<button onclick="document.getElementById(\'key-setup\').remove()" style="padding:10px 16px;border:1px solid #d4d4d0;border-radius:8px;background:none;font-size:14px;cursor:pointer">Cancel</button>' : '')
     + '</div>'
-    + '<div style="margin-top:12px;font-size:11px;color:#a1a1aa;text-align:center">Stored in your browser only. Never shared.</div>'
-    + '</div>';
+    + '<div style="margin-top:10px;font-size:11px;color:#a1a1aa;text-align:center">Stored in your browser only. Never shared.</div></div>';
   document.body.appendChild(wrap);
-  if (existing) { wrap.addEventListener('click', function(e) { if (e.target === wrap) wrap.remove(); }); }
-  setTimeout(function() { var inp = document.getElementById('api-key-input'); if (inp) inp.focus(); }, 100);
+  if (existing) { wrap.addEventListener('click', function(e){if(e.target===wrap)wrap.remove();}); }
+  setTimeout(function(){ var inp=document.getElementById('api-key-input');if(inp)inp.focus(); }, 100);
 }
 
 function saveKey() {
   var inp = document.getElementById('api-key-input');
   var val = inp ? inp.value.trim() : '';
   if (!val || !val.startsWith('sk-')) {
-    if (inp) { inp.style.borderColor = '#dc2626'; inp.placeholder = 'Must start with sk-ant-...'; }
+    if (inp) { inp.style.borderColor='#dc2626'; inp.placeholder='Must start with sk-ant-...'; }
     return;
   }
   localStorage.setItem('firmOS_apiKey', val);
@@ -398,9 +518,10 @@ function saveKey() {
   banner.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0d6e52;color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:9998;pointer-events:none';
   banner.textContent = 'API key saved — all 7 agents are now active';
   document.body.appendChild(banner);
-  setTimeout(function() { banner.remove(); }, 3000);
+  setTimeout(function(){banner.remove();}, 3000);
 }
 
+// ── Input handlers
 document.getElementById('msg-input').addEventListener('input', function() {
   this.style.height = 'auto';
   this.style.height = Math.min(this.scrollHeight, 120) + 'px';
@@ -410,13 +531,11 @@ document.getElementById('msg-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
 });
 document.getElementById('send-btn').addEventListener('click', function() { sendMsg(); });
-document.getElementById('send-btn').style.background = '#0d6e52';
-document.getElementById('send-btn').style.color = '#fff';
 
+// ── Init
 loadFirmClients();
 renderRoster();
 renderNav();
-
 if (!localStorage.getItem('firmOS_apiKey')) {
   setTimeout(function() { showKeySetup(); }, 600);
 }
