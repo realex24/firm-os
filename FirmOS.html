@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firm OS — Accounting Operations Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sb:#16162a;--sb2:#1e1e35;--sbt:rgba(255,255,255,.62);--sba:rgba(255,255,255,.11);--sbh:rgba(255,255,255,.06);
+  --bg:#f7f7f4;--sur:#ffffff;--bdr:#e6e6e1;--bdr2:#d2d2cb;
+  --tx:#18181b;--txm:#6b6b74;--txh:#a1a1aa;
+  --acc:#0d6e52;--accl:#e0f5ef;--acct:#08503c;
+  --blue:#1d4ed8;--bluel:#dbeafe;--bluet:#1e3a8a;
+  --amb:#92400e;--ambl:#fef3c7;
+  --red:#991b1b;--redl:#fee2e2;
+  --grn:#166534;--grnl:#dcfce7;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;--serif:'Playfair Display',serif;
+  --r:10px;--rs:6px;--sbw:218px;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100vh;display:flex;font-size:14px;line-height:1.6}
+#sidebar{width:var(--sbw);background:var(--sb);min-height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+.sb-brand{padding:1.5rem 1.25rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-logo{display:flex;align-items:center;gap:9px;margin-bottom:2px}
+.sb-icon{width:30px;height:30px;background:var(--acc);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-icon svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
+.sb-name{font-family:var(--serif);font-size:16px;color:#fff;font-weight:500;letter-spacing:-.02em}
+.sb-tag{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.04em;margin-top:2px}
+.sb-sec{padding:.875rem 0 .25rem}
+.sb-lbl{font-size:10px;color:rgba(255,255,255,.28);letter-spacing:.08em;text-transform:uppercase;padding:0 1.25rem;margin-bottom:3px}
+.nav{display:flex;align-items:center;gap:8px;padding:6px 1.25rem;color:var(--sbt);font-size:13px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--sans);transition:background .12s,color .12s;user-select:none}
+.nav:hover{background:var(--sbh);color:rgba(255,255,255,.88)}
+.nav.on{background:var(--sba);color:#fff}
+.nav.on .nd{background:#4ade80}
+.nd{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.22);flex-shrink:0}
+.nbadge{margin-left:auto;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:10px;padding:1px 6px;border-radius:10px;font-family:var(--mono)}
+.sb-footer{margin-top:auto;padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,.07)}
+.sb-version{font-size:11px;color:rgba(255,255,255,.25)}
+#main{margin-left:var(--sbw);flex:1;padding:2rem 2.5rem;min-width:0;max-width:calc(100vw - var(--sbw))}
+.page{display:none}.page.on{display:block}
+.ph{margin-bottom:1.75rem}
+.pt{font-family:var(--serif);font-size:26px;font-weight:500;letter-spacing:-.02em;color:var(--tx)}
+.ps{font-size:13px;color:var(--txm);margin-top:4px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:1.5rem}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:1.5rem}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:1.5rem}
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:1.25rem}
+.mc{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:1rem 1.25rem}
+.ml{font-size:11px;color:var(--txh);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+.mv{font-size:26px;font-weight:500;color:var(--tx);font-family:var(--mono);line-height:1}
+.mch{font-size:12px;color:var(--txm);margin-top:4px}
+.mch.up{color:var(--acc)}.mch.dn{color:var(--red)}
+.bdg{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.bg{background:var(--grnl);color:var(--grn)}.bb{background:var(--bluel);color:var(--bluet)}
+.ba{background:var(--ambl);color:var(--amb)}.br{background:var(--redl);color:var(--red)}
+.bgr{background:#f4f4f5;color:#52525b}
+.divider{height:1px;background:var(--bdr);margin:1.5rem 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 12px;font-size:11px;color:var(--txh);letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--bdr);font-weight:500}
+td{padding:10px 12px;border-bottom:1px solid var(--bdr);color:var(--tx);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafaf8}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--rs);font-size:13px;font-family:var(--sans);cursor:pointer;transition:all .12s;border:1px solid var(--bdr2);background:var(--sur);color:var(--tx);font-weight:400;line-height:1}
+.btn:hover{background:var(--bg)}.btn:active{transform:scale(.98)}
+.btnp{background:var(--acc);color:#fff;border-color:var(--acc)}.btnp:hover{background:var(--acct);border-color:var(--acct)}
+.btnsm{padding:4px 10px;font-size:12px}
+.btnxs{padding:2px 8px;font-size:11px}
+input[type=text],input[type=number],input[type=email],select,textarea{width:100%;padding:8px 12px;border:1px solid var(--bdr2);border-radius:var(--rs);font-size:13px;font-family:var(--sans);color:var(--tx);background:var(--sur);outline:none;transition:border-color .12s}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+textarea{resize:vertical;min-height:80px;line-height:1.6}
+label{display:block;font-size:12px;color:var(--txm);margin-bottom:4px;font-weight:500}
+.fr{margin-bottom:12px}
+input[type=checkbox]{width:15px;height:15px;accent-color:var(--acc);cursor:pointer}
+.ptrack{height:5px;background:var(--bdr);border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px;background:var(--acc);transition:width .3s}
+.accord{border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.ahead{display:flex;align-items:center;padding:.875rem 1.25rem;cursor:pointer;gap:10px;background:var(--sur);user-select:none;transition:background .12s}
+.ahead:hover{background:#fafaf8}
+.atitle{font-size:14px;font-weight:500;flex:1;color:var(--tx)}
+.ameta{font-size:12px;color:var(--txm);font-family:var(--mono)}
+.achev{font-size:10px;color:var(--txh);transition:transform .2s}
+.achev.open{transform:rotate(90deg)}
+.abody{display:none;padding:1rem 1.25rem;border-top:1px solid var(--bdr);background:#fefefe}
+.abody.open{display:block}
+.tr2{display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid var(--bdr)}
+.tr2:last-child{border-bottom:none}
+.tt{font-size:13px;flex:1;line-height:1.5;color:var(--tx)}
+.tt.done{text-decoration:line-through;color:var(--txh)}
+.alert{padding:10px 14px;border-radius:var(--rs);font-size:13px;margin-bottom:12px;border-left:3px solid}
+.ag{background:var(--accl);border-color:var(--acc);color:var(--acct)}
+.aa{background:var(--ambl);border-color:#d97706;color:var(--amb)}
+.ar{background:var(--redl);border-color:#dc2626;color:var(--red)}
+.ab{background:var(--bluel);border-color:#2563eb;color:var(--bluet)}
+.tplbox{background:#f5f5f2;border:1px solid var(--bdr);border-radius:var(--rs);padding:1rem;font-size:13px;line-height:1.8;color:var(--tx);white-space:pre-wrap;font-family:var(--sans);margin-bottom:10px;max-height:340px;overflow-y:auto}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--bdr);margin-bottom:1.5rem}
+.tab{padding:8px 16px;font-size:13px;cursor:pointer;border:none;background:none;color:var(--txm);font-family:var(--sans);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s}
+.tab:hover{color:var(--tx)}.tab.on{color:var(--acc);border-bottom-color:var(--acc);font-weight:500}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--accl);color:var(--acct);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-top:1px}
+.step-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--bdr)}
+.step-row:last-child{border-bottom:none}
+.step-content{flex:1}
+.step-title{font-size:13px;font-weight:500;color:var(--tx);margin-bottom:2px}
+.step-detail{font-size:12px;color:var(--txm);line-height:1.55}
+.kpi-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr)}
+.kpi-row:last-child{border-bottom:none}
+.kpi-name{font-size:13px;color:var(--tx);width:160px;flex-shrink:0}
+.kpi-bar-wrap{flex:1;height:7px;background:var(--bdr);border-radius:4px;overflow:hidden;position:relative}
+.kpi-bar{height:100%;border-radius:4px;transition:width .4s}
+.kpi-nums{display:flex;gap:12px;font-size:12px;font-family:var(--mono);flex-shrink:0;width:140px}
+.kpi-client{color:var(--tx);font-weight:500}
+.kpi-bench{color:var(--txm)}
+.tag-pill{display:inline-flex;font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--bdr2);color:var(--txm);margin:2px}
+.activity-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:13px}
+.activity-row:last-child{border-bottom:none}
+.act-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.act-text{flex:1;color:var(--tx)}
+.act-time{font-size:11px;color:var(--txh);font-family:var(--mono)}
+.deadline-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bdr)}
+.deadline-row:last-child{border-bottom:none}
+.dl-date{font-family:var(--mono);font-size:12px;color:var(--txm);width:80px;flex-shrink:0}
+.dl-text{font-size:13px;flex:1;color:var(--tx)}
+.nexus-good{background:var(--grnl);color:var(--grn)}
+.nexus-warn{background:var(--ambl);color:var(--amb)}
+.nexus-risk{background:var(--redl);color:var(--red)}
+.onboard-step{display:flex;align-items:center;gap:10px;padding:6px 0}
+.os-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--bdr2);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.os-check.done{background:var(--acc);border-color:var(--acc)}
+.os-check.done::after{content:'';width:6px;height:9px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg);margin-top:-2px}
+.os-label{font-size:13px;color:var(--tx)}
+.os-label.done{color:var(--txh);text-decoration:line-through}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<aside id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <div class="sb-icon">
+        <svg viewBox="0 0 16 16"><polyline points="2,12 6,7 9,10 14,4"/></svg>
+      </div>
+      <span class="sb-name">Firm OS</span>
+    </div>
+    <div class="sb-tag">Accounting Operations Platform</div>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-lbl">Overview</div>
+    <button class="nav on" onclick="go('dashboard')"><span class="nd"></span>Dashboard</button>
+    <button class="nav" onclick="go('clients')"><span class="nd"></span>Clients <span class="nbadge" id="nb-clients">5</span></button>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-lbl">Operations</div>
+    <button class="nav" onclick="go('workflows')"><span class="nd"></span>Workflows</button>
+    <button class="nav" onclick="go('reminders')"><span class="nd"></span>Reminders</button>
+    <button class="nav" onclick="go('reports')"><span class="nd"></span>Report builder</button>
+    <button class="nav" onclick="go('sops')"><span class="nd"></span>SOP library</button>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-lbl">Compliance</div>
+    <button class="nav" onclick="go('taxplanning')"><span class="nd"></span>Tax planning</button>
+    <button class="nav" onclick="go('nexus')"><span class="nd"></span>Sales tax nexus</button>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-lbl">Growth</div>
+    <button class="nav" onclick="go('benchmarks')"><span class="nd"></span>Benchmarks</button>
+    <button class="nav" onclick="go('advisory')"><span class="nd"></span>CFO advisory</button>
+  </div>
+
+  <div class="sb-footer">
+    <div class="sb-version">Firm OS v2.0</div><a href="AgentWorkforce.html" style="display:block;margin-top:8px;padding:6px 10px;background:rgba(13,110,82,.15);border:1px solid rgba(13,110,82,.3);border-radius:6px;color:#4ade80;font-size:11px;text-decoration:none;text-align:center;transition:background .12s" onmouseover="this.style.background='rgba(13,110,82,.25)'" onmouseout="this.style.background='rgba(13,110,82,.15)'">Open AI Agent Workforce →</a>
+  </div>
+</aside>
+
+<main id="main">
+
+<!-- DASHBOARD -->
+<div class="page on" id="pg-dashboard">
+  <div class="ph"><div class="pt" id="dash-greeting">Good morning</div><div class="ps">Here's your firm at a glance — updated today</div></div>
+  <div class="g4" id="dash-metrics"></div>
+  <div class="g2">
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:1rem">Upcoming deadlines</div>
+      <div id="dash-deadlines"></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:1rem">Recent activity</div>
+      <div id="dash-activity"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:1rem">Client MRR overview</div>
+    <div id="dash-clients-table"></div>
+  </div>
+</div>
+
+<!-- CLIENTS -->
+<div class="page" id="pg-clients">
+  <div class="ph" style="display:flex;align-items:flex-start;justify-content:space-between">
+    <div><div class="pt">Clients</div><div class="ps">Manage relationships, onboarding, and service configuration</div></div>
+    <button class="btn btnp btnsm" onclick="showAddClient()">+ Add client</button>
+  </div>
+  <div id="client-onboard-section"></div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:1rem">All clients</div>
+    <div id="clients-table"></div>
+  </div>
+</div>
+
+<!-- WORKFLOWS -->
+<div class="page" id="pg-workflows">
+  <div class="ph"><div class="pt">Workflows</div><div class="ps">Track monthly, payroll, tax, and year-end task progress</div></div>
+  <div class="g4" id="wf-metrics"></div>
+  <div id="wf-sidebar-nav" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem"></div>
+  <div id="wf-content"></div>
+</div>
+
+<!-- REMINDERS -->
+<div class="page" id="pg-reminders">
+  <div class="ph"><div class="pt">Reminder templates</div><div class="ps">Professional email templates ready to customize and send</div></div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:500;margin-bottom:12px">Select a template</div>
+        <div id="tpl-list"></div>
+      </div>
+    </div>
+    <div>
+      <div id="tpl-preview"></div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT BUILDER -->
+<div class="page" id="pg-reports">
+  <div class="ph"><div class="pt">Report builder</div><div class="ps">Generate polished client financial narratives in seconds</div></div>
+  <div class="g2">
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:1rem">Report inputs</div>
+      <div class="fr"><label>Client name</label><input type="text" id="rpt-client" placeholder="e.g. Bella's Bistro" oninput="buildReport()"></div>
+      <div class="fr"><label>Reporting period</label><input type="text" id="rpt-period" placeholder="e.g. March 2025" oninput="buildReport()"></div>
+      <div class="fr"><label>Revenue ($)</label><input type="number" id="rpt-rev" placeholder="85000" oninput="buildReport()"></div>
+      <div class="fr"><label>Revenue vs. prior month (%)</label><input type="number" id="rpt-rev-chg" placeholder="4.2" oninput="buildReport()"></div>
+      <div class="fr"><label>Net profit ($)</label><input type="number" id="rpt-profit" placeholder="6200" oninput="buildReport()"></div>
+      <div class="fr"><label>Cash balance (month-end $)</label><input type="number" id="rpt-cash" placeholder="34500" oninput="buildReport()"></div>
+      <div class="fr"><label>Key highlight #1</label><input type="text" id="rpt-h1" placeholder="e.g. Revenue exceeded target by 8%" oninput="buildReport()"></div>
+      <div class="fr"><label>Key highlight #2</label><input type="text" id="rpt-h2" placeholder="e.g. A/R collection improved by 6 days" oninput="buildReport()"></div>
+      <div class="fr"><label>Action item #1</label><input type="text" id="rpt-a1" placeholder="e.g. Review Q2 estimated tax payment" oninput="buildReport()"></div>
+      <div class="fr"><label>Action item #2</label><input type="text" id="rpt-a2" placeholder="e.g. Send updated mileage log" oninput="buildReport()"></div>
+      <div class="fr"><label>Your name / firm</label><input type="text" id="rpt-firm" placeholder="Jane Smith · Clarity Accounting" oninput="buildReport()"></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:500">Generated report email</div>
+          <button class="btn btnsm" onclick="copyReport(this)">Copy ↗</button>
+        </div>
+        <div class="tplbox" id="rpt-output">Fill in the fields on the left to generate your report email.</div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:500;margin-bottom:10px">Client cover memo</div>
+        <div class="tplbox" id="rpt-memo">Fill in client and financial data to generate.</div>
+        <button class="btn btnsm" onclick="copyMemo(this)" style="margin-top:6px">Copy memo ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAX PLANNING -->
+<div class="page" id="pg-taxplanning">
+  <div class="ph"><div class="pt">Tax planning</div><div class="ps">Build quarterly tax planning memos and track estimated payments</div></div>
+  <div class="g2">
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:1rem">Memo builder</div>
+      <div class="fr"><label>Client name</label><input type="text" id="tx-client" placeholder="e.g. Apex Construction LLC" oninput="buildTaxMemo()"></div>
+      <div class="fr"><label>Quarter & year</label><input type="text" id="tx-qtr" placeholder="e.g. Q2 2025" oninput="buildTaxMemo()"></div>
+      <div class="fr"><label>Entity type</label>
+        <select id="tx-entity" onchange="buildTaxMemo()">
+          <option value="S-Corp">S-Corporation</option>
+          <option value="LLC (Partnership)">LLC (Partnership)</option>
+          <option value="Sole Proprietorship">Sole Proprietorship</option>
+          <option value="C-Corporation">C-Corporation</option>
+        </select>
+      </div>
+      <div class="fr"><label>YTD revenue ($)</label><input type="number" id="tx-rev" placeholder="320000" oninput="buildTaxMemo()"></div>
+      <div class="fr"><label>YTD net income ($)</label><input type="number" id="tx-ni" placeholder="48000" oninput="buildTaxMemo()"></div>
+      <div class="fr"><label>Prior year total tax ($)</label><input type="number" id="tx-prior" placeholder="22000" oninput="buildTaxMemo()"></div>
+      <div class="fr"><label>YTD estimated payments made ($)</label><input type="number" id="tx-paid" placeholder="11000" oninput="buildTaxMemo()"></div>
+      <div class="fr"><label>Tax strategy #1</label><input type="text" id="tx-s1" placeholder="e.g. Accelerate Q3 equipment purchase (~$18k)" oninput="buildTaxMemo()"></div>
+      <div class="fr"><label>Tax strategy #2</label><input type="text" id="tx-s2" placeholder="e.g. Max SEP-IRA contribution before year-end" oninput="buildTaxMemo()"></div>
+      <div class="fr"><label>Tax strategy #3</label><input type="text" id="tx-s3" placeholder="e.g. Review owner salary vs. distribution mix" oninput="buildTaxMemo()"></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:500">Generated tax planning memo</div>
+          <button class="btn btnsm" onclick="copyTaxMemo(this)">Copy ↗</button>
+        </div>
+        <div class="tplbox" id="tx-output">Fill in the fields to generate your tax planning memo.</div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:500;margin-bottom:.75rem">Estimated tax payment tracker</div>
+        <div id="est-tracker"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOPs -->
+<div class="page" id="pg-sops">
+  <div class="ph"><div class="pt">SOP library</div><div class="ps">Step-by-step procedures for every workflow — printable and searchable</div></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem" id="sop-filters"></div>
+  <div id="sop-list"></div>
+</div>
+
+<!-- NEXUS -->
+<div class="page" id="pg-nexus">
+  <div class="ph"><div class="pt">Sales tax nexus tracker</div><div class="ps">Economic nexus thresholds and client exposure by state</div></div>
+  <div class="g3" id="nexus-metrics"></div>
+  <div class="g2">
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:1rem">Track client exposure</div>
+      <div class="fr"><label>Select client</label>
+        <select id="nx-client" onchange="updateNexusClient()">
+          <option value="">— Choose client —</option>
+        </select>
+      </div>
+      <div id="nx-client-detail" style="display:none">
+        <div class="alert ag" id="nx-status-msg"></div>
+        <div id="nx-state-checklist"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:1rem">Nexus questionnaire</div>
+      <div style="font-size:12px;color:var(--txm);margin-bottom:12px;line-height:1.6">Use this checklist during annual client review to identify potential nexus exposure.</div>
+      <div id="nx-questionnaire"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div style="font-size:13px;font-weight:500;margin-bottom:1rem">State economic nexus thresholds</div>
+    <div class="alert aa" style="margin-bottom:1rem">Thresholds effective 2024–2025. Always verify current thresholds with each state's department of revenue before filing.</div>
+    <table>
+      <thead><tr><th>State</th><th>Sales threshold</th><th>Transaction threshold</th><th>Base rate</th><th>Notes</th></tr></thead>
+      <tbody id="nexus-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- BENCHMARKS -->
+<div class="page" id="pg-benchmarks">
+  <div class="ph"><div class="pt">Industry benchmarks</div><div class="ps">Compare client performance to real industry averages</div></div>
+  <div style="margin-bottom:1.25rem">
+    <div class="fr" style="max-width:280px;margin-bottom:8px"><label>Select industry</label>
+      <select id="bmk-industry" onchange="renderBenchmarks()">
+        <option value="restaurant">Restaurant / Food service</option>
+        <option value="construction">Construction & contracting</option>
+        <option value="professional">Professional services</option>
+        <option value="retail">Retail</option>
+      </select>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:4px">Enter client figures</div>
+      <div style="font-size:12px;color:var(--txm);margin-bottom:1rem">Update any field to see real-time comparison</div>
+      <div id="bmk-inputs"></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:4px">Performance vs. benchmark</div>
+      <div style="font-size:12px;color:var(--txm);margin-bottom:1rem">Green = at or above benchmark &nbsp;·&nbsp; Amber = below benchmark</div>
+      <div id="bmk-chart"></div>
+      <div class="divider"></div>
+      <div style="font-size:12px;color:var(--txm)">Benchmark data sourced from NAICS, RMA Annual Statement Studies, and Bizminer industry averages.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADVISORY -->
+<div class="page" id="pg-advisory">
+  <div class="ph"><div class="pt">CFO advisory</div><div class="ps">Fractional CFO service management — pipeline, deliverables, and pricing</div></div>
+  <div class="g3" id="adv-metrics"></div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:500;margin-bottom:1rem">Active advisory clients</div>
+        <div id="adv-clients"></div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:500;margin-bottom:1rem">Advisory pipeline</div>
+        <div id="adv-pipeline"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:500;margin-bottom:1rem">Service tier builder</div>
+        <div style="font-size:12px;color:var(--txm);margin-bottom:1rem">Configure your advisory tiers and see suggested pricing</div>
+        <div id="adv-tiers"></div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:500;margin-bottom:.75rem">Monthly deliverables checklist</div>
+        <div style="font-size:12px;color:var(--txm);margin-bottom:1rem">Track deliverables for each advisory client</div>
+        <div id="adv-checklist"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const D = {
+clients:[
+  {id:'c1',name:"Bella's Bistro",industry:'restaurant',status:'active',services:['Monthly Bookkeeping','Payroll'],mrr:650,contact:'Maria Bellini',email:'maria@bellasbistro.com',states:['FL'],onboarded:'2024-06-15'},
+  {id:'c2',name:'Apex Construction LLC',industry:'construction',status:'active',services:['Monthly Bookkeeping','Payroll','Sales Tax','Tax Planning'],mrr:1200,contact:'James Thornton',email:'james@apexconstruction.com',states:['FL','GA'],onboarded:'2023-11-01'},
+  {id:'c3',name:'Meridian Marketing',industry:'professional',status:'active',services:['Monthly Bookkeeping','Tax Planning','CFO Advisory'],mrr:2800,contact:'Sarah Chen',email:'sarah@meridianmktg.com',states:['FL','NY','CA'],onboarded:'2022-03-20'},
+  {id:'c4',name:'TechFlow Solutions',industry:'saas',status:'onboarding',services:['Monthly Bookkeeping'],mrr:800,contact:'Derek Walsh',email:'derek@techflow.io',states:['FL'],onboarded:null},
+  {id:'c5',name:'Green Grove Retail',industry:'retail',status:'active',services:['Monthly Bookkeeping','Sales Tax'],mrr:950,contact:'Linda Park',email:'linda@greengrove.com',states:['FL','AL'],onboarded:'2024-01-10'}
+],
+onboardSteps:['Engagement letter signed','QBO access granted','Chart of accounts configured','Bank feeds connected','Bank rules set up','Historical data imported','Practice mgmt tasks created','Client folder created','Welcome kit sent','First close scheduled'],
+deadlines:[
+  {date:'Apr 15',text:'Q1 estimated tax payments due',urgency:'red'},
+  {date:'Apr 15',text:'Individual tax returns / extensions due',urgency:'red'},
+  {date:'Apr 30',text:'March monthly close — all clients',urgency:'amber'},
+  {date:'Apr 30',text:'Form 941 Q1 filing deadline',urgency:'amber'},
+  {date:'May 1',text:'April document collection opens',urgency:'green'},
+  {date:'May 15',text:'Florida sales tax return — April',urgency:'green'},
+  {date:'Jun 15',text:'Q2 estimated tax payments due',urgency:'green'},
+],
+activity:[
+  {text:"March close complete — Bella's Bistro",time:'2h ago',color:'#0d6e52'},
+  {text:'Q1 tax memo delivered — Meridian Marketing',time:'Yesterday',color:'#1d4ed8'},
+  {text:'New client intake — TechFlow Solutions',time:'2 days ago',color:'#7c3aed'},
+  {text:'1099s filed — all clients',time:'Jan 31',color:'#0d6e52'},
+  {text:'Year-end close complete — Apex Construction',time:'Jan 18',color:'#0d6e52'},
+],
+workflows:{
+  monthly:{label:'Monthly bookkeeping',color:'#378ADD',phases:[
+    {label:'Pre-processing',window:'Days 1–5',tasks:['Send document collection reminder to client','Request bank and credit card statements','Obtain payroll reports (if processed externally)','Collect sales data and receipts','Review prior month open items']},
+    {label:'Transaction processing',window:'Days 5–10',tasks:['Review and categorize bank transactions in QBO','Reconcile credit card transactions','Enter manual transactions not in feeds','Record owner draws and contributions','Record depreciation entries','Flag and document unusual transactions']},
+    {label:'Account reconciliation',window:'Days 10–15',tasks:['Reconcile all bank accounts','Reconcile all credit card accounts','Reconcile loan and line-of-credit accounts','Verify accounts receivable aging','Verify accounts payable aging','Resolve all outstanding discrepancies']},
+    {label:'Month-end procedures',window:'Days 15–20',tasks:['Perform general ledger review','Adjust prepaid expenses and accruals','Record necessary adjusting journal entries','Record monthly depreciation','Close the month in QBO (set closing date)','Back up client QBO data']},
+    {label:'Client reporting',window:'Days 20–25',tasks:['Generate P&L statement (month + YTD)','Prepare balance sheet','Create cash flow statement','Compile KPI dashboard','Write narrative summary for client','Deliver financial package and schedule review']}
+  ]},
+  payroll:{label:'Payroll processing',color:'#D4537E',phases:[
+    {label:'Bi-weekly cycle',window:'Per pay run',tasks:['Collect approved timesheets by period end','Note new hires, terminations, salary changes','Enter hours and confirm salary in payroll system','Review pre-submission summary (taxes, deductions)','Submit payroll and confirm direct deposits','Post payroll journal entry to QBO','Verify tax deposit requirements (EFTPS)']},
+    {label:'Monthly payroll tasks',window:'Monthly',tasks:['Reconcile payroll accounts to QBO','Verify payroll tax liabilities are fully funded','Make monthly federal/state tax deposits if required','Review labor cost allocation by department','Update year-to-date payroll summary report']},
+    {label:'Quarterly payroll tasks',window:'Quarterly',tasks:['Prepare and file Form 941 (federal)','Prepare state unemployment tax returns (FUTA/SUTA)','Make quarterly tax deposits as scheduled','Reconcile quarterly payroll to general ledger','Review and update labor cost forecasts']}
+  ]},
+  salestax:{label:'Sales tax',color:'#BA7517',phases:[
+    {label:'Monthly sales tax',window:'Monthly',tasks:['Run Sales Tax Liability Report in QBO','Verify tax collected matches liability report','Prepare filing worksheet by jurisdiction','Log into state tax portal','Enter and submit return data','Make payment via ACH; save confirmation','Record payment in QBO to clear liability']},
+    {label:'Quarterly sales tax',window:'Quarterly',tasks:['Prepare and file quarterly returns (applicable states)','Reconcile quarterly liability to QBO','Update for any rate changes this quarter','Perform economic nexus review for multi-state clients','Document nexus analysis in client file']}
+  ]},
+  yearend:{label:'Year-end',color:'#D85A30',phases:[
+    {label:'Pre-year-end planning',window:'Q4',tasks:['Schedule year-end closing timeline with team','Review potential tax-saving transactions before Dec 31','Notify clients of all year-end deadlines','Identify all required info for tax filings','Plan 1099 preparation and data collection']},
+    {label:'Year-end close',window:'January',tasks:['Complete all final bank and CC reconciliations','Reconcile every balance sheet account','Review all revenue and expense classifications','Adjust inventory valuations (if applicable)','Record all year-end depreciation and amortization','Close the fiscal year in QBO']},
+    {label:'Tax return preparation',window:'Jan–Apr',tasks:['Collect all tax documents from clients','Prepare and file 1099-NECs (due January 31)','Complete tax organizers for each client','Prepare business tax returns (partnerships, S-corps due Mar 15)','Prepare individual returns for owners (due Apr 15)','Review, obtain signatures, and file returns']}
+  ]},
+  qc:{label:'Quality control',color:'#639922',phases:[
+    {label:'Monthly review',window:'Monthly',tasks:['Secondary accountant reviews all reconciliations','Manager reviews financial statements for reasonableness','Document all review notes and corrections','Obtain client approval or sign-off on financials']},
+    {label:'Quarterly audit',window:'Quarterly',tasks:['Peer review of client files (random sample)','Update internal control documentation','Review compliance with firm quality standards','Update any client-specific procedures']},
+    {label:'Process improvement',window:'Ongoing',tasks:['Evaluate new automation opportunities','Update QBO app integrations as needed','Review and refine firm-wide workflows','Document and implement process improvements']}
+  ]}
+},
+templates:{
+  docRequest:{label:'Monthly document request',subject:'Monthly document request — [Month Year]',body:`Hi [Client Name],
+
+Hope you're having a great month! It's time to prepare your [Month] financial statements.
+
+To complete your bookkeeping on schedule, please send the following by [Due Date]:
+
+  ☐  Bank statements for all business checking, savings, and money market accounts
+  ☐  Credit card statements for all business cards
+  ☐  Receipts for any cash purchases over $75
+  ☐  Payroll reports (if processed outside our firm)
+  ☐  Any invoices paid or received not yet in QBO
+
+Please upload documents securely via your client portal, or reply directly to this email.
+
+Questions? Reply here or call us at [Phone Number]. We'll have your statements ready by [Delivery Date].
+
+Warm regards,
+[Your Name] · [Firm Name]`},
+  reviewMeeting:{label:'Quarterly review meeting',subject:'Your Q[X] financial review — let\'s connect',body:`Hi [Client Name],
+
+Your Q[X] financials are ready, and I'd love to walk you through the key highlights together.
+
+Quick preview:
+  • Revenue: $[Amount] ([+/-X%] vs. Q[X-1])
+  • Net profit: $[Amount] ([X]% margin)
+  • One thing to focus on in Q[X+1]: [Key insight]
+
+I have 45-minute video calls available at the following times:
+  • [Date/Time Option 1]
+  • [Date/Time Option 2]
+  • [Date/Time Option 3]
+
+Or grab a time directly: [Calendly/booking link]
+
+Looking forward to connecting!
+
+Best,
+[Your Name] · [Firm Name]`},
+  taxDeadline:{label:'Tax deadline reminder',subject:'Upcoming tax deadline — [Date]',body:`Hi [Client Name],
+
+A quick heads-up that [Tax Filing or Payment description] is due on [Date].
+
+Key details:
+  • Estimated amount due: $[Amount]
+  • Payment method: IRS Direct Pay / EFTPS / Check
+  • Filing required: Yes / No (extension already on file)
+
+Action needed from you by [Date minus 3 days]: [Specific action — e.g., "Confirm approval to file" or "Ensure funds are available in the business account"]
+
+I'll handle the filing on our end. Just want to make sure you're aware of the deadline and any amount due.
+
+Please don't hesitate to reach out with questions.
+
+Best,
+[Your Name] · [Firm Name]`},
+  financialDelivery:{label:'Financial package delivery',subject:'[Month Year] financial statements — [Client Name]',body:`Hi [Client Name],
+
+Your [Month Year] financial statements are attached and ready for review.
+
+  Highlights:
+  • Revenue: $[X] ([+/-X%] vs. prior month)
+  • Net profit/loss: $[X] ([X]% margin)
+  • Cash balance (month-end): $[X]
+
+  Notable items this month:
+  • [Notable item 1]
+  • [Notable item 2]
+
+  Recommended action items:
+  1. [Action item 1]
+  2. [Action item 2]
+
+Attached: Profit & Loss, Balance Sheet, Cash Flow Statement.
+
+Reply to schedule a review call or reach out with any questions.
+
+Best,
+[Your Name] · [Firm Name]`},
+  form1099:{label:'1099 information request',subject:'1099 preparation — information needed by January 15',body:`Hi [Client Name],
+
+1099 filing season is here. To meet the January 31 deadline, I need the following for any vendor or contractor paid $600 or more in [Year]:
+
+For each contractor, please provide:
+  ☐  Full legal name (or business name as shown on their W-9)
+  ☐  Mailing address
+  ☐  Tax ID number (SSN or EIN) — from their completed W-9 form
+  ☐  Total amount paid in [Year]
+
+If you haven't collected W-9 forms, please do so now — I can send a blank W-9 template on request.
+
+Please send this information by January 15 to allow time for accurate preparation and avoid IRS penalties ($60–$310 per late/incorrect return).
+
+Best,
+[Your Name] · [Firm Name]`},
+  yearEndNotice:{label:'Year-end deadline notice',subject:'Year-end planning — key deadlines ahead',body:`Hi [Client Name],
+
+As we approach year-end, here are the actions and deadlines to keep on your radar:
+
+Before December 31 (to count for this tax year):
+  • Make any planned equipment or asset purchases
+  • Maximize retirement plan contributions (SEP-IRA, SIMPLE, Solo 401k)
+  • Review and accelerate any deductible business expenses
+  • Consider timing of year-end invoices to manage taxable income
+
+January key dates:
+  • January 15 — Q4 estimated tax payment due
+  • January 31 — W-2s to employees; 1099s to contractors
+  • We begin tax return preparation for your account: [Start date]
+
+What I need from you by [Date]:
+  ☐  Confirmation of major asset purchases or disposals this year
+  ☐  Updated vehicle mileage log (if applicable)
+  ☐  Home office details (if applicable)
+  ☐  Any major business changes, ownership changes, or new loans
+
+Let's schedule a year-end planning call in November or early December — just reply to get on the calendar.
+
+Best,
+[Your Name] · [Firm Name]`},
+  extensionNotice:{label:'Tax extension filed',subject:'Tax extension filed — what this means for you',body:`Hi [Client Name],
+
+I've filed a [federal/state] tax extension for your [Year] [business/individual] return. Here's what you need to know:
+
+  ✓  Extension filed on: [Date]
+  ✓  New filing deadline: [October 15 / September 15 / Other]
+  ⚠  Important: An extension gives us more time to FILE — not more time to PAY.
+
+  Estimated balance due: $[Amount]
+  Payment due: [Original deadline, typically April 15]
+
+If you have a balance due and haven't paid yet, I recommend making a payment now to stop interest and penalty from accruing. You can pay directly at IRS.gov/payments (IRS Direct Pay, no account needed).
+
+Next steps:
+  1. [Make payment if balance due]
+  2. [Send outstanding documents by target date]
+  3. I'll have your return ready by [Target completion date]
+
+Let me know if you have any questions.
+
+Best,
+[Your Name] · [Firm Name]`},
+  engagementFollowUp:{label:'Engagement letter follow-up',subject:'Your engagement letter — quick follow-up',body:`Hi [Client Name],
+
+I wanted to follow up on the engagement letter I sent on [Date] for [Service Description].
+
+To get us started, I'll need:
+  1. Your signed engagement letter (attached again for reference)
+  2. [Item 2 — e.g., QBO accountant access invite]
+  3. [Item 3 — e.g., Prior year tax return copies]
+
+Once received, we can begin [specific first step — e.g., setting up your QBO account / reviewing your prior year filings].
+
+If you have any questions about the terms, service scope, or fee structure, I'm happy to jump on a quick 15-minute call to walk through everything.
+
+Best,
+[Your Name] · [Firm Name]`}
+},
+sops:[
+  {id:'bank-rec',title:'Bank reconciliation — QBO',category:'Monthly',time:'30–45 min/account',steps:[
+    {t:'Gather the bank statement',d:'Download or print the official bank statement for the period. Note the statement ending date and ending balance. Never rely on the online balance — use the official statement.'},
+    {t:'Open QBO reconciliation',d:'Go to Accounting → Reconcile. Select the correct bank account. Enter the statement ending date and the ending balance exactly as shown on the statement.'},
+    {t:'Match transactions',d:'Check off each cleared transaction in QBO that appears on the bank statement. Work top to bottom, chronologically. Do not check anything that is not on the statement.'},
+    {t:'Investigate the difference',d:'If difference ≠ $0, look for: duplicate entries, transposed amounts, missing transactions, timing differences (deposits in transit, outstanding checks from prior periods).'},
+    {t:'Add missing transactions',d:'For any transaction on the bank statement that is missing from QBO, add it now with the correct date, payee, and category. Flag any unknown items for client clarification.'},
+    {t:'Finish reconciliation',d:'When the difference = $0, click Finish Now. QBO marks all matched transactions as cleared. Never force a reconciliation with a discrepancy — investigate until it balances.'},
+    {t:'Save reconciliation report',d:'Export the reconciliation summary report. Save to the client folder. Add a note to the client file for any unusual items, adjustments, or client questions.'}
+  ]},
+  {id:'cc-rec',title:'Credit card reconciliation — QBO',category:'Monthly',time:'20–30 min/card',steps:[
+    {t:'Obtain official statement',d:'Download the official credit card statement from the card provider — not just the QBO register. Confirm the statement period and ending balance (amount owed).'},
+    {t:'Review auto-imported transactions',d:'In QBO, open the credit card account register. Confirm all charges from the statement period are present. Look for: duplicates, missing charges, or incorrectly auto-categorized items.'},
+    {t:'Categorize all charges',d:'Every charge must be properly categorized before reconciling. Flag any personal charges as owner draws. Contact the client for receipts on any large or ambiguous charges.'},
+    {t:'Reconcile in QBO',d:'Accounting → Reconcile → Select the credit card. Enter the statement date and ending balance (enter as a positive number — QBO knows it is a liability). Click Start Reconciling.'},
+    {t:'Match transactions',d:'Check off each charge and credit that matches the statement. Refunds and credits appear as negative amounts. The running difference must reach $0.'},
+    {t:'Resolve discrepancies',d:'Common issues: annual fee missed, credit/refund not entered, split transaction doesn\'t match. Every penny must reconcile. Do not proceed until difference = $0.'},
+    {t:'Save and document',d:'Export the reconciliation report. Note any personal charges treated as owner draws. File the statement copy in the client folder. Update QBO closing date.'}
+  ]},
+  {id:'payroll',title:'Bi-weekly payroll processing',category:'Payroll',time:'45–90 min/cycle',steps:[
+    {t:'Collect hours and personnel changes',d:'Obtain manager-approved timesheets by end of the pay period. Note any: new hires (need W-4, I-9, direct deposit form), terminations, rate changes, garnishments, or benefit enrollment changes.'},
+    {t:'Enter payroll data',d:'Log into QBO Payroll or the integrated system. Select the correct pay period dates. Enter hours for hourly employees. Confirm salaries are current. Enter bonuses, commissions, or supplemental pay if applicable.'},
+    {t:'Review pre-submission summary',d:'Before submitting, carefully review: gross wages, federal income tax, Social Security/Medicare, state/local withholdings, benefit deductions, garnishments, and net pay. Verify totals against prior period for anomalies.'},
+    {t:'Submit and fund payroll',d:'Submit payroll in the system. Confirm direct deposit funding date (typically 2 business days before pay date). For paper checks, print and distribute on the pay date.'},
+    {t:'Post payroll journal entry',d:'In QBO, post the payroll journal entry: Debit Wage Expense and Payroll Tax Expense; Credit Bank/Payroll Clearing, Payroll Tax Liability, and Benefit Liability accounts.'},
+    {t:'Schedule tax deposits',d:'Confirm whether client is a semi-weekly or monthly EFTPS depositor. Schedule federal deposits accordingly. Check state-specific deposit schedules and deadlines.'},
+    {t:'File and document',d:'Save the payroll register, pay stubs, and tax liability summary to the client folder. Update the YTD payroll tracker. Note any items to address before the next cycle.'}
+  ]},
+  {id:'salestax',title:'Monthly sales tax filing',category:'Sales Tax',time:'1–2 hrs/state',steps:[
+    {t:'Pull QBO Sales Tax Liability Report',d:'In QBO: Reports → Sales Tax Liability. Set the date range to the exact filing period. Export to Excel. Review: gross sales, taxable sales, exempt sales, and tax collected by jurisdiction.'},
+    {t:'Verify tax collected matches QBO',d:'Compare the report totals to the actual tax collected in the period. Discrepancies may indicate rate errors, uncollected tax, or miscategorized transactions. Resolve all differences before proceeding.'},
+    {t:'Prepare the filing worksheet',d:'For each state: calculate gross sales, taxable sales, applicable deductions, and net tax due. Cross-check all totals against the QBO report. Document your worksheet in the client folder.'},
+    {t:'Access state filing portal',d:'Log into the state\'s tax authority portal (e.g., Florida\'s MyFlorida.com, Georgia GTCDR, etc.) using firm credentials. Navigate to Sales Tax → File Return for the period.'},
+    {t:'Enter return data',d:'Enter sales figures exactly as calculated on your worksheet. Many states require county- or city-level breakdowns — use QBO\'s jurisdiction-level detail for these. Confirm the total amount due before submitting.'},
+    {t:'Make payment',d:'Pay via ACH debit from the client\'s business bank account. Confirm the payment date. Print or screenshot the confirmation number. Never assume the filing went through — always confirm receipt.'},
+    {t:'Record in QBO and file documentation',d:'In QBO: Taxes → Sales Tax → Record Payment. This clears the sales tax liability account. Save the filed return and payment confirmation to the client folder. Update the nexus tracker if applicable.'}
+  ]},
+  {id:'monthend',title:'Month-end close procedure',category:'Monthly',time:'2–4 hrs/client',steps:[
+    {t:'Complete all reconciliations first',d:'Bank and credit card reconciliations must all reach $0 before proceeding. This is a hard prerequisite. Do not attempt month-end procedures with unreconciled accounts.'},
+    {t:'Clear all uncategorized transactions',d:'Run the Uncategorized Income/Expense report. Every transaction must be properly categorized. Review "Ask My Accountant" items — schedule a call with the client to resolve any open questions.'},
+    {t:'Adjust prepaid expenses',d:'Review the Prepaid Expenses balance. Expense the current month\'s portion via journal entry (Debit: appropriate expense account; Credit: Prepaid Expenses). Maintain a running amortization schedule.'},
+    {t:'Record monthly depreciation',d:'Post the monthly depreciation entry per the fixed asset and depreciation schedule (Debit: Depreciation Expense; Credit: Accumulated Depreciation). Verify YTD depreciation matches the schedule exactly.'},
+    {t:'Record accruals',d:'Accrue any revenue earned but not yet invoiced, and expenses incurred but not yet billed. Common items: interest accruals, accrued wages for partial pay periods, accrued professional fees.'},
+    {t:'General ledger review',d:'Run the Trial Balance. Review each account for: reasonableness, unexpected sign reversals, large month-over-month variances, and any accounts that shouldn\'t have activity. Document your review.'},
+    {t:'Generate and deliver financial statements',d:'Run P&L (current month + YTD), Balance Sheet (as of period end), and Cash Flow Statement. Export to PDF. Prepare the client-facing narrative email. Deliver the package.'},
+    {t:'Lock the period in QBO',d:'Settings → Account and Settings → Advanced → Close the books. Set the closing date to the last day of the period. Set a password. This prevents accidental changes to reconciled periods.'}
+  ]},
+  {id:'newclient',title:'New client QBO setup',category:'Onboarding',time:'3–5 hrs',steps:[
+    {t:'Establish QBO access',d:'Option A: Create new subscription via your ProAdvisor discount link (client saves 30–50%). Option B: Client adds you via the Accountant tab → Invite Accountant. Verify you have Master Admin or Accountant User access before proceeding.'},
+    {t:'Configure company settings',d:'Settings → Company Settings. Verify: legal business name, EIN/TIN, fiscal year start month, industry type, accounting method (cash vs. accrual). Set the "Close the books" date to the prior year-end.'},
+    {t:'Build the chart of accounts',d:'Import or build the COA using your industry-specific template. Deactivate unnecessary default accounts. Add custom accounts for client-specific needs. Assign account numbers if the client uses them for reporting.'},
+    {t:'Connect bank and credit card feeds',d:'Banking → Link Account. Connect all business checking, savings, investment, and credit card accounts. Confirm feeds are pulling 90 days of history. Verify all transactions are importing correctly.'},
+    {t:'Set up bank rules',d:'Create rules for recurring payees: rent, utilities, loan payments, payroll, subscriptions. Proper bank rules reduce manual categorization by 60–70% each month. Test each rule on imported transactions.'},
+    {t:'Import historical data',d:'If converting mid-year: enter the trial balance as of the conversion date as an opening journal entry. If starting fresh: import YTD transactions for each account from the prior system or bank statements.'},
+    {t:'Configure users and access',d:'Invite team members with appropriate access levels. Invite the client as Company Admin or Standard User based on their involvement. Document all login credentials securely in your password manager.'},
+    {t:'Complete onboarding and document',d:'Check off all onboarding tasks in your practice management software. Schedule the first month-end close. Create the client folder in your document management system. Send the welcome kit and confirm the client understands the workflow.'}
+  ]}
+],
+nexusStates:[
+  {state:'Alabama',abbr:'AL',sales:'$250,000',txns:'No threshold',rate:'4% + local',note:'SSUT simplification program available for remote sellers'},
+  {state:'Arizona',abbr:'AZ',sales:'$100,000',txns:'or 200 txns',rate:'5.6% + local',note:'TPT system — city rates can add 2–5%'},
+  {state:'California',abbr:'CA',sales:'$500,000',txns:'No threshold',rate:'7.25% + local',note:'Highest base rate; district taxes up to 3.25%'},
+  {state:'Colorado',abbr:'CO',sales:'$100,000',txns:'or 200 txns',rate:'2.9% + local',note:'Home rule cities require separate registration'},
+  {state:'Florida',abbr:'FL',sales:'$100,000',txns:'or 200 txns',rate:'6% + surtax',note:'Effective July 2021; county surtaxes vary'},
+  {state:'Georgia',abbr:'GA',sales:'$100,000',txns:'or 200 txns',rate:'4% + local',note:'Local taxes can add 3%+'},
+  {state:'Illinois',abbr:'IL',sales:'$100,000',txns:'or 200 txns',rate:'6.25% + local',note:'Complex sourcing rules (origin vs. destination)'},
+  {state:'Michigan',abbr:'MI',sales:'$100,000',txns:'or 200 txns',rate:'6%',note:'No local sales tax; relatively simple filing'},
+  {state:'New York',abbr:'NY',sales:'$500,000',txns:'AND 100 txns',rate:'4% + local',note:'Both thresholds must be met; NYC adds 4.5%'},
+  {state:'North Carolina',abbr:'NC',sales:'$100,000',txns:'or 200 txns',rate:'4.75% + local',note:'Local rates typically 2–2.75%'},
+  {state:'Ohio',abbr:'OH',sales:'$100,000',txns:'or 200 txns',rate:'5.75% + local',note:'County and transit authority taxes apply'},
+  {state:'Pennsylvania',abbr:'PA',sales:'$100,000',txns:'or 200 txns',rate:'6% + local',note:'Philadelphia and Allegheny County have local rates'},
+  {state:'Texas',abbr:'TX',sales:'$500,000',txns:'No threshold',rate:'6.25% + local',note:'Local taxes up to 2%; origin sourcing for in-state sellers'},
+  {state:'Virginia',abbr:'VA',sales:'$100,000',txns:'or 200 txns',rate:'4.3% + local',note:'Regional rates vary; Northern VA and Hampton Roads higher'},
+  {state:'Washington',abbr:'WA',sales:'$100,000',txns:'or 200 txns',rate:'6.5% + local',note:'B&O gross receipts tax applies separately; no income tax'},
+],
+benchmarks:{
+  restaurant:{label:'Restaurant / Food service',metrics:[
+    {name:'Food cost %',bench:30,unit:'%',fmt:'pct',good:'lower',note:'Target: 28–32%'},
+    {name:'Labor cost %',bench:33,unit:'%',fmt:'pct',good:'lower',note:'Front + back of house combined'},
+    {name:'Gross profit margin',bench:70,unit:'%',fmt:'pct',good:'higher',note:'Revenue minus COGS'},
+    {name:'Net profit margin',bench:6,unit:'%',fmt:'pct',good:'higher',note:'Industry avg 3–9%'},
+    {name:'Prime cost %',bench:62,unit:'%',fmt:'pct',good:'lower',note:'Food + labor — keep under 65%'}
+  ]},
+  construction:{label:'Construction & contracting',metrics:[
+    {name:'Gross profit margin',bench:25,unit:'%',fmt:'pct',good:'higher',note:'After direct job costs'},
+    {name:'Net profit margin',bench:5,unit:'%',fmt:'pct',good:'higher',note:'Industry avg 2–8%'},
+    {name:'Overhead ratio',bench:20,unit:'%',fmt:'pct',good:'lower',note:'Overhead / total revenue'},
+    {name:'A/R days outstanding',bench:35,unit:'days',fmt:'num',good:'lower',note:'Average collection period'},
+    {name:'Revenue per employee',bench:200000,unit:'$',fmt:'cur',good:'higher',note:'Annual revenue / FTE count'}
+  ]},
+  professional:{label:'Professional services',metrics:[
+    {name:'Gross profit margin',bench:70,unit:'%',fmt:'pct',good:'higher',note:'After direct service costs'},
+    {name:'Net profit margin',bench:20,unit:'%',fmt:'pct',good:'higher',note:'Industry avg 15–30%'},
+    {name:'Utilization rate',bench:75,unit:'%',fmt:'pct',good:'higher',note:'Billable hours / total hours available'},
+    {name:'Revenue per employee',bench:160000,unit:'$',fmt:'cur',good:'higher',note:'Annual revenue / FTE'},
+    {name:'Client retention rate',bench:90,unit:'%',fmt:'pct',good:'higher',note:'Annual recurring clients'}
+  ]},
+  retail:{label:'Retail',metrics:[
+    {name:'Gross profit margin',bench:50,unit:'%',fmt:'pct',good:'higher',note:'Varies significantly by category'},
+    {name:'Net profit margin',bench:4,unit:'%',fmt:'pct',good:'higher',note:'Industry avg 2–6%'},
+    {name:'Inventory turnover',bench:6,unit:'×/yr',fmt:'num',good:'higher',note:'COGS / average inventory'},
+    {name:'Sales per sq ft',bench:350,unit:'$/sqft',fmt:'cur',good:'higher',note:'Annual sales / retail floor area'},
+    {name:'Current ratio',bench:2.0,unit:'×',fmt:'num',good:'higher',note:'Current assets / current liabilities'}
+  ]}
+},
+advisoryClients:[
+  {name:'Meridian Marketing',tier:'Full CFO',mrr:1500,since:'Jan 2024',status:'active',deliverables:['Cash flow forecast (12-mo rolling)','Monthly KPI dashboard','Monthly strategy call','Quarterly tax planning memo']},
+  {name:'Apex Construction LLC',tier:'Basic',mrr:750,since:'Jul 2024',status:'active',deliverables:['Monthly KPI dashboard','Quarterly review call']}
+],
+advisoryPipeline:[
+  {name:"Bella's Bistro",stage:'Interested',notes:'Owner asked about advisory after Q2 review. Follow up in September.',potential:500},
+  {name:'TechFlow Solutions',stage:'Proposal sent',notes:'Sent Basic tier proposal on Apr 1. Awaiting response.',potential:750}
+],
+nexusQuestions:[
+  'Does the client sell products or services to customers in states other than their home state?',
+  'Does the client have any employees, contractors, or agents working in other states?',
+  'Does the client store inventory in warehouses or fulfillment centers in other states?',
+  'Does the client use a drop-shipper or third-party fulfillment (e.g., Amazon FBA) in other states?',
+  'Has the client crossed $100,000 in sales in any single state this year?',
+  'Has the client completed 200 or more transactions in any single state this year?',
+  'Has the client registered for sales tax in all states where they have nexus?',
+  'Has the client\'s sales activity changed significantly from prior year (new states, higher volume)?'
+]
+};
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let S = {
+  page:'dashboard',
+  tasks:{},
+  wfSection:'monthly',
+  wfOpenPhases:{},
+  tplSelected:'docRequest',
+  sopFilter:'All',
+  sopOpen:{},
+  bmkValues:{},
+  onboardProgress:{},
+  nxClient:'',
+  nxStates:{},
+  nxQ:{},
+  advChecklist:{}
+};
+try{const saved=localStorage.getItem('firmOS_state');if(saved){const p=JSON.parse(saved);['tasks','onboardProgress','nxStates','nxQ','advChecklist','bmkValues'].forEach(k=>{if(p[k])S[k]=p[k]})}}catch(e){}
+
+function save(){try{localStorage.setItem('firmOS_state',JSON.stringify({tasks:S.tasks,onboardProgress:S.onboardProgress,nxStates:S.nxStates,nxQ:S.nxQ,advChecklist:S.advChecklist,bmkValues:S.bmkValues}));}catch(e){}}
+
+// ─── ROUTER ───────────────────────────────────────────────────────────────────
+function go(page){
+  S.page=page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('on'));
+  document.getElementById('pg-'+page).classList.add('on');
+  document.querySelectorAll('.nav').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+page+"'"))n.classList.add('on')});
+  PAGES[page]&&PAGES[page]();
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+const $ = id=>document.getElementById(id);
+const fmt$ = n=>(n==null||n==='')? '—':'$'+Number(n).toLocaleString();
+const fmtPct = n=>n!=null?n+'%':'—';
+function setHTML(id,html){const el=$(id);if(el)el.innerHTML=html;}
+function copyText(text,btn){navigator.clipboard.writeText(text).then(()=>{const orig=btn.textContent;btn.textContent='Copied!';btn.style.color='var(--acc)';setTimeout(()=>{btn.textContent=orig;btn.style.color=''},2000)});}
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────────
+function renderDashboard(){
+  const h=new Date().getHours();
+  const greeting=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  const greetEl=$('dash-greeting');if(greetEl)greetEl.textContent=greeting;
+  const totalMRR=D.clients.reduce((a,c)=>a+c.mrr,0);
+  const active=D.clients.filter(c=>c.status==='active').length;
+  const onboarding=D.clients.filter(c=>c.status==='onboarding').length;
+  const totalTasks=Object.values(D.workflows).reduce((a,w)=>a+w.phases.reduce((b,p)=>b+p.tasks.length,0),0);
+  const doneTasks=Object.keys(S.tasks).filter(k=>S.tasks[k]).length;
+  setHTML('dash-metrics',
+    mc('Active clients',active,''+onboarding+' onboarding')+
+    mc('Monthly MRR',fmt$(totalMRR),'Across all services','up')+
+    mc('Tasks completed',doneTasks+' / '+totalTasks,'Across all workflows','up')+
+    mc('Deadlines this month',D.deadlines.filter(d=>['red','amber'].includes(d.urgency)).length,'Require immediate attention','dn')
+  );
+  setHTML('dash-deadlines',D.deadlines.map(d=>`<div class="deadline-row"><span class="dl-date">${d.date}</span><span class="dl-text">${d.text}</span><span class="bdg ${d.urgency==='red'?'br':d.urgency==='amber'?'ba':'bg'}">${d.urgency==='red'?'Urgent':d.urgency==='amber'?'Soon':'Upcoming'}</span></div>`).join(''));
+  setHTML('dash-activity',D.activity.map(a=>`<div class="activity-row"><span class="act-dot" style="background:${a.color}"></span><span class="act-text">${a.text}</span><span class="act-time">${a.time}</span></div>`).join(''));
+  setHTML('dash-clients-table',`<table><thead><tr><th>Client</th><th>Industry</th><th>Services</th><th>MRR</th><th>Status</th></tr></thead><tbody>${D.clients.map(c=>`<tr><td><strong>${c.name}</strong></td><td style="color:var(--txm)">${cap(c.industry)}</td><td>${c.services.map(s=>`<span class="tag-pill">${s}</span>`).join('')}</td><td style="font-family:var(--mono)">${fmt$(c.mrr)}</td><td><span class="bdg ${c.status==='active'?'bg':c.status==='onboarding'?'bb':'bgr'}">${cap(c.status)}</span></td></tr>`).join('')}</tbody></table>`);
+}
+function mc(lbl,val,sub,dir){return`<div class="mc"><div class="ml">${lbl}</div><div class="mv">${val}</div><div class="mch ${dir||''}">${sub}</div></div>`}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+
+// ─── CLIENTS ─────────────────────────────────────────────────────────────────
+function renderClients(){
+  const ob=D.clients.find(c=>c.status==='onboarding');
+  let obHTML='';
+  if(ob){
+    const prog=S.onboardProgress[ob.id]||{};
+    const done=D.onboardSteps.filter((_,i)=>prog[i]).length;
+    const pct=Math.round(done/D.onboardSteps.length*100);
+    obHTML=`<div class="card" style="margin-bottom:16px;border:2px solid var(--acc)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem"><div><div style="font-size:13px;font-weight:500">Onboarding: ${ob.name}</div><div style="font-size:12px;color:var(--txm);margin-top:2px">48-hour onboarding target &nbsp;·&nbsp; ${done}/${D.onboardSteps.length} steps complete</div></div><span class="bdg bb">${pct}% complete</span></div><div class="ptrack" style="margin-bottom:12px"><div class="pfill" style="width:${pct}%"></div></div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px 16px">${D.onboardSteps.map((step,i)=>`<div class="onboard-step"><div class="os-check ${prog[i]?'done':''}" onclick="toggleOnboard('${ob.id}',${i})"></div><span class="os-label ${prog[i]?'done':''}">${step}</span></div>`).join('')}</div></div>`;
+  }
+  setHTML('client-onboard-section',obHTML);
+  setHTML('clients-table',`<table><thead><tr><th>Client</th><th>Contact</th><th>Industry</th><th>Services</th><th>States</th><th>MRR</th><th>Status</th></tr></thead><tbody>${D.clients.map(c=>`<tr><td><strong>${c.name}</strong></td><td style="color:var(--txm);font-size:12px">${c.contact}<br><a href="mailto:${c.email}" style="color:var(--blue)">${c.email}</a></td><td style="color:var(--txm)">${cap(c.industry)}</td><td>${c.services.map(s=>`<span class="tag-pill">${s}</span>`).join('')}</td><td style="font-family:var(--mono);font-size:12px">${c.states.join(', ')}</td><td style="font-family:var(--mono)">${fmt$(c.mrr)}</td><td><span class="bdg ${c.status==='active'?'bg':c.status==='onboarding'?'bb':'bgr'}">${cap(c.status)}</span></td></tr>`).join('')}</tbody></table>`);
+}
+function toggleOnboard(cid,i){if(!S.onboardProgress[cid])S.onboardProgress[cid]={};S.onboardProgress[cid][i]=!S.onboardProgress[cid][i];save();renderClients();}
+function showAddClient(){
+  if($('add-client-form')){$('add-client-form').remove();return;}
+  const form=document.createElement('div');
+  form.id='add-client-form';
+  form.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem';
+  const svcs=['Monthly Bookkeeping','Payroll','Sales Tax','Tax Planning','CFO Advisory'];
+  form.innerHTML=`<div style="background:var(--sur);border:1px solid var(--bdr2);border-radius:var(--r);padding:1.75rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem"><div style="font-size:16px;font-weight:500">Add new client</div><button onclick="document.getElementById('add-client-form').remove()" style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--txh);line-height:1">×</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="fr" style="margin:0"><label>Business name *</label><input type="text" id="nc-name" placeholder="e.g. Sunrise Bakery"></div><div class="fr" style="margin:0"><label>Industry</label><select id="nc-industry"><option value="restaurant">Restaurant</option><option value="construction">Construction</option><option value="professional">Professional services</option><option value="retail">Retail</option><option value="saas">SaaS / Tech</option><option value="other">Other</option></select></div><div class="fr" style="margin:0"><label>Primary contact</label><input type="text" id="nc-contact" placeholder="Full name"></div><div class="fr" style="margin:0"><label>Email</label><input type="email" id="nc-email" placeholder="owner@business.com"></div><div class="fr" style="margin:0"><label>Monthly MRR ($)</label><input type="number" id="nc-mrr" placeholder="0"></div><div class="fr" style="margin:0"><label>Status</label><select id="nc-status"><option value="onboarding">Onboarding</option><option value="active">Active</option></select></div><div class="fr" style="margin:0;grid-column:span 2"><label>Services</label><div style="display:flex;flex-wrap:wrap;gap:8px;padding:6px 0">${svcs.map(s=>'<label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;color:var(--tx);cursor:pointer"><input type="checkbox" value="'+s+'" class="nc-svc"> '+s+'</label>').join('')}</div></div><div class="fr" style="margin:0;grid-column:span 2"><label>States (comma-separated)</label><input type="text" id="nc-states" placeholder="FL, GA"></div></div><div style="display:flex;gap:10px;margin-top:1.25rem"><button class="btn btnp" onclick="submitNewClient()" style="flex:1">Add client</button><button class="btn" onclick="document.getElementById('add-client-form').remove()">Cancel</button></div></div>`;
+  document.body.appendChild(form);
+  form.addEventListener('click',e=>{if(e.target===form)form.remove();});
+}
+function submitNewClient(){
+  const name=$('nc-name')&&$('nc-name').value.trim();
+  if(!name){if($('nc-name'))$('nc-name').focus();return;}
+  const services=[...document.querySelectorAll('#add-client-form .nc-svc:checked')].map(c=>c.value);
+  const statesRaw=$('nc-states').value.split(',').map(s=>s.trim().toUpperCase()).filter(Boolean);
+  D.clients.push({id:'c'+Date.now(),name,industry:$('nc-industry').value,status:$('nc-status').value,services:services.length?services:['Monthly Bookkeeping'],mrr:parseInt($('nc-mrr').value)||0,contact:$('nc-contact').value||'—',email:$('nc-email').value||'',states:statesRaw.length?statesRaw:['FL'],onboarded:$('nc-status').value==='active'?new Date().toISOString().split('T')[0]:null});
+  const nb=$('nb-clients');if(nb)nb.textContent=D.clients.length;
+  $('add-client-form').remove();
+  renderClients();
+  renderDashboard();
+}
+
+// ─── WORKFLOWS ────────────────────────────────────────────────────────────────
+function renderWorkflows(){
+  const keys=Object.keys(D.workflows);
+  let totalAll=0,doneAll=0;
+  keys.forEach(k=>{D.workflows[k].phases.forEach((p,pi)=>{p.tasks.forEach((_,ti)=>{totalAll++;if(S.tasks[k+'_'+pi+'_'+ti])doneAll++;})})});
+  const pct=totalAll?Math.round(doneAll/totalAll*100):0;
+  setHTML('wf-metrics',
+    mc('Overall completion',pct+'%','Across all workflows','up')+
+    mc('Tasks remaining',totalAll-doneAll,'To complete this cycle')+
+    mc('Workflows active',keys.length,'Monthly, payroll, sales tax, year-end')+
+    mc('Tasks completed',doneAll,'This period','up')
+  );
+  setHTML('wf-sidebar-nav',keys.map(k=>`<button onclick="S.wfSection='${k}';renderWorkflows()" class="btn ${S.wfSection===k?'btnp':''} btnsm">${D.workflows[k].label}</button>`).join(''));
+  const wf=D.workflows[S.wfSection];
+  let totalW=0,doneW=0;
+  wf.phases.forEach((p,pi)=>p.tasks.forEach((_,ti)=>{totalW++;if(S.tasks[S.wfSection+'_'+pi+'_'+ti])doneW++;}));
+  const pctW=totalW?Math.round(doneW/totalW*100):0;
+  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="font-size:13px;font-weight:500;color:var(--tx)">${wf.label}</div><span style="font-size:13px;font-family:var(--mono);color:var(--txm)">${doneW}/${totalW} tasks &nbsp;·&nbsp; ${pctW}%</span></div><div class="ptrack" style="margin-bottom:1.25rem"><div class="pfill" style="width:${pctW}%;background:${wf.color}"></div></div>`;
+  wf.phases.forEach((phase,pi)=>{
+    const phKey=S.wfSection+'_'+pi;
+    const open=S.wfOpenPhases[phKey];
+    let phDone=0;phase.tasks.forEach((_,ti)=>{if(S.tasks[S.wfSection+'_'+pi+'_'+ti])phDone++;});
+    const phPct=Math.round(phDone/phase.tasks.length*100);
+    html+=`<div class="accord"><div class="ahead" onclick="toggleWfPhase('${phKey}')"><span class="bdg bgr" style="font-size:11px">${phase.window}</span><span class="atitle">${phase.label}</span><span class="ameta" style="color:${phDone===phase.tasks.length?wf.color:'var(--txm)'}">${phDone}/${phase.tasks.length}</span><span class="achev ${open?'open':''}">&#9654;</span></div><div class="abody ${open?'open':''}"><div class="ptrack" style="margin-bottom:10px"><div class="pfill" style="width:${phPct}%;background:${wf.color}"></div></div>${phase.tasks.map((t,ti)=>{const tk=S.wfSection+'_'+pi+'_'+ti;const done=S.tasks[tk];return`<div class="tr2"><input type="checkbox" ${done?'checked':''} onchange="toggleTask('${tk}')"><span class="tt ${done?'done':''}">${t}</span></div>`}).join('')}</div></div>`;
+  });
+  setHTML('wf-content',html);
+}
+function toggleWfPhase(k){S.wfOpenPhases[k]=!S.wfOpenPhases[k];renderWorkflows();}
+function toggleTask(k){S.tasks[k]=!S.tasks[k];save();renderWorkflows();}
+
+// ─── REMINDERS ────────────────────────────────────────────────────────────────
+function renderReminders(){
+  const tpls=D.templates;
+  const keys=Object.keys(tpls);
+  setHTML('tpl-list',keys.map(k=>`<div onclick="S.tplSelected='${k}';renderReminders()" style="padding:8px 12px;border-radius:var(--rs);cursor:pointer;margin-bottom:4px;background:${S.tplSelected===k?'var(--accl)':'transparent'};color:${S.tplSelected===k?'var(--acct)':'var(--tx)'};font-size:13px;border:1px solid ${S.tplSelected===k?'var(--acc)':'transparent'}">${tpls[k].label}</div>`).join(''));
+  const t=tpls[S.tplSelected];
+  setHTML('tpl-preview',`<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:13px;font-weight:500">${t.label}</div><button class="btn btnsm" onclick="copyText(document.getElementById('tpl-body').textContent,this)">Copy ↗</button></div><div style="font-size:12px;color:var(--txm);margin-bottom:4px">Subject line</div><div style="background:var(--bg);border:1px solid var(--bdr);border-radius:var(--rs);padding:8px 12px;font-size:13px;margin-bottom:12px;font-family:var(--mono)">${t.subject}</div><div style="font-size:12px;color:var(--txm);margin-bottom:4px">Email body</div><div class="tplbox" id="tpl-body">${t.body}</div><div class="alert ab" style="margin-top:8px">Replace all <strong>[bracketed fields]</strong> with client-specific information before sending.</div></div>`);
+}
+
+// ─── REPORT BUILDER ───────────────────────────────────────────────────────────
+function buildReport(){
+  const cl=$('rpt-client').value||'[Client Name]';
+  const per=$('rpt-period').value||'[Month Year]';
+  const rev=Number($('rpt-rev').value);
+  const revChg=Number($('rpt-rev-chg').value);
+  const profit=Number($('rpt-profit').value);
+  const cash=Number($('rpt-cash').value);
+  const h1=$('rpt-h1').value||'[Key highlight 1]';
+  const h2=$('rpt-h2').value||'[Key highlight 2]';
+  const a1=$('rpt-a1').value||'[Action item 1]';
+  const a2=$('rpt-a2').value||'[Action item 2]';
+  const firm=$('rpt-firm').value||'[Your Name · Firm Name]';
+  const margin=rev&&profit?((profit/rev)*100).toFixed(1):'—';
+  const chgTxt=revChg?(revChg>0?'+':'')+revChg+'% vs. prior month':'';
+  const email=`Hi ${cl},
+
+Your ${per} financial statements are ready for review.
+
+  Revenue:           ${rev?fmt$(rev):'[amount]'} ${chgTxt?'('+chgTxt+')':''}
+  Net profit:        ${profit?fmt$(profit):'[amount]'} ${margin!=='—'?'('+margin+'% margin)':''}
+  Cash balance:      ${cash?fmt$(cash):'[amount]'}
+
+Highlights this month:
+  • ${h1}
+  • ${h2}
+
+Recommended action items:
+  1. ${a1}
+  2. ${a2}
+
+Full package attached: Profit & Loss, Balance Sheet, and Cash Flow Statement.
+
+Reply to schedule a 30-minute review call, or reach out with any questions.
+
+Best,
+${firm}`;
+  const memo=`${per.toUpperCase()} FINANCIAL SUMMARY — ${cl.toUpperCase()}
+${'─'.repeat(52)}
+
+REVENUE
+  ${per} revenue:        ${rev?fmt$(rev):'—'}
+  Month-over-month:     ${revChg?(revChg>0?'+':'')+revChg+'%':'—'}
+
+PROFITABILITY
+  Net profit/(loss):    ${profit?fmt$(profit):'—'}
+  Net margin:           ${margin!=='—'?margin+'%':'—'}
+
+LIQUIDITY
+  Cash balance (EOM):   ${cash?fmt$(cash):'—'}
+
+KEY OBSERVATIONS
+  1. ${h1}
+  2. ${h2}
+
+RECOMMENDED ACTIONS
+  1. ${a1}
+  2. ${a2}
+
+Prepared by: ${firm}
+Period: ${per}`;
+  $('rpt-output').textContent=email;
+  $('rpt-memo').textContent=memo;
+}
+function copyReport(btn){copyText($('rpt-output').textContent,btn);}
+function copyMemo(btn){copyText($('rpt-memo').textContent,btn);}
+
+// ─── TAX PLANNING ─────────────────────────────────────────────────────────────
+function buildTaxMemo(){
+  const cl=$('tx-client').value||'[Client Name]';
+  const qtr=$('tx-qtr').value||'[Quarter Year]';
+  const entity=$('tx-entity').value;
+  const rev=Number($('tx-rev').value)||0;
+  const ni=Number($('tx-ni').value)||0;
+  const prior=Number($('tx-prior').value)||0;
+  const paid=Number($('tx-paid').value)||0;
+  const s1=$('tx-s1').value||'[Strategy 1]';
+  const s2=$('tx-s2').value||'[Strategy 2]';
+  const s3=$('tx-s3').value||'[Strategy 3]';
+  const estAnnual=rev?Math.round((ni/rev)*rev*1.25*0.28):0;
+  const remaining=estAnnual-paid;
+  const memo=`TAX PLANNING MEMO
+To: ${cl}
+From: [Firm Name]
+Date: ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}
+Period: ${qtr}
+Entity: ${entity}
+${'─'.repeat(52)}
+
+FINANCIAL SNAPSHOT (YTD)
+  Revenue:                  ${rev?fmt$(rev):'—'}
+  Net income:               ${ni?fmt$(ni):'—'}
+  Net margin:               ${rev&&ni?((ni/rev)*100).toFixed(1)+'%':'—'}
+
+TAX PROJECTION
+  Prior year total tax:     ${prior?fmt$(prior):'—'}
+  Estimated current tax:    ${estAnnual?fmt$(estAnnual):'[See note below]'}
+  Estimated payments made:  ${paid?fmt$(paid):'—'}
+  Remaining balance est.:   ${remaining?fmt$(remaining):'—'}
+
+  Note: Estimates based on current-year income trajectory. Final tax will depend
+  on year-end income, deductions, and applicable credits.
+
+TAX PLANNING STRATEGIES FOR ${qtr.toUpperCase()}
+
+  1. ${s1}
+
+  2. ${s2}
+
+  3. ${s3}
+
+ESTIMATED TAX PAYMENT SCHEDULE
+  Q1 (April 15):    ${prior?fmt$(Math.round(prior*0.25)):'[Calculate]'}
+  Q2 (June 15):     ${prior?fmt$(Math.round(prior*0.25)):'[Calculate]'}
+  Q3 (September 15):${prior?fmt$(Math.round(prior*0.25)):'[Calculate]'}
+  Q4 (January 15):  ${prior?fmt$(Math.round(prior*0.25)):'[Calculate]'}
+
+  Payment method: IRS Direct Pay (IRS.gov/payments) or EFTPS
+
+ACTION ITEMS
+  ☐  Review and implement strategies above by [date]
+  ☐  Confirm ${qtr} estimated payment is scheduled
+  ☐  Schedule year-end planning meeting for Q4
+
+This memo is for planning purposes only. Actual tax liability may vary.
+Please contact us before making significant financial decisions based on
+these projections.`;
+  $('tx-output').textContent=memo;
+  setHTML('est-tracker',`<div style="font-size:12px;color:var(--txm);margin-bottom:8px">Based on prior year tax of ${prior?fmt$(prior):'—'}</div>${['Q1 — Apr 15','Q2 — Jun 15','Q3 — Sep 15','Q4 — Jan 15'].map((q,i)=>{const amt=prior?Math.round(prior*0.25):0;return`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:13px"><span>${q}</span><span style="font-family:var(--mono);color:var(--tx)">${amt?fmt$(amt):'—'}</span><span class="bdg ${i<2?'bg':'bgr'}">${i<2?'Paid':'Pending'}</span></div>`}).join('')}`);
+}
+function copyTaxMemo(btn){copyText($('tx-output').textContent,btn);}
+
+// ─── SOPs ────────────────────────────────────────────────────────────────────
+function renderSOPs(){
+  const cats=['All',...new Set(D.sops.map(s=>s.category))];
+  setHTML('sop-filters',cats.map(c=>`<button onclick="S.sopFilter='${c}';renderSOPs()" class="btn ${S.sopFilter===c?'btnp':''} btnsm">${c}</button>`).join(''));
+  const filtered=S.sopFilter==='All'?D.sops:D.sops.filter(s=>s.category===S.sopFilter);
+  setHTML('sop-list',filtered.map(sop=>{
+    const open=S.sopOpen[sop.id];
+    return`<div class="accord"><div class="ahead" onclick="S.sopOpen['${sop.id}']=!S.sopOpen['${sop.id}'];renderSOPs()"><span class="bdg bgr">${sop.category}</span><span class="atitle">${sop.title}</span><span class="ameta">${sop.steps.length} steps &nbsp;·&nbsp; ${sop.time}</span><span class="achev ${open?'open':''}">&#9654;</span></div><div class="abody ${open?'open':''}">${sop.steps.map((s,i)=>`<div class="step-row"><div class="step-num">${i+1}</div><div class="step-content"><div class="step-title">${s.t}</div><div class="step-detail">${s.d}</div></div></div>`).join('')}<div style="margin-top:12px"><button class="btn btnsm" onclick="printSOP('${sop.id}')">Print SOP</button></div></div></div>`;
+  }).join(''));
+}
+function printSOP(id){const sop=D.sops.find(s=>s.id===id);if(!sop)return;const w=window.open('','_blank');w.document.write(`<html><head><title>${sop.title}</title><style>body{font-family:Georgia,serif;max-width:700px;margin:2rem auto;color:#111}h1{font-size:20px;margin-bottom:4px}p{color:#555;font-size:13px;margin-bottom:1.5rem}.step{margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid #eee}.step-num{font-size:12px;color:#888;margin-bottom:4px}.step-t{font-size:15px;font-weight:bold;margin-bottom:4px}.step-d{font-size:13px;color:#444;line-height:1.6}</style></head><body><h1>${sop.title}</h1><p>Category: ${sop.category} &nbsp;·&nbsp; Estimated time: ${sop.time}</p>${sop.steps.map((s,i)=>`<div class="step"><div class="step-num">Step ${i+1} of ${sop.steps.length}</div><div class="step-t">${s.t}</div><div class="step-d">${s.d}</div></div>`).join('')}</body></html>`);w.document.close();w.print();}
+
+// ─── NEXUS ────────────────────────────────────────────────────────────────────
+function renderNexus(){
+  setHTML('nexus-metrics',
+    mc('States with nexus risk',D.nexusStates.filter(s=>['NY','CA','TX'].includes(s.abbr)).length,'High-threshold states')+
+    mc('Client states tracked',new Set(D.clients.flatMap(c=>c.states)).size,'Across all clients')+
+    mc('Clients multi-state',D.clients.filter(c=>c.states.length>1).length,'Require nexus review')
+  );
+  const sel=$('nx-client');
+  sel.innerHTML='<option value="">— Choose client —</option>'+D.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  sel.value=S.nxClient||'';
+  updateNexusClient();
+  setHTML('nx-questionnaire',D.nexusQuestions.map((q,i)=>{const k='nxq_'+i;return`<div style="display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)"><input type="checkbox" ${S.nxQ[k]?'checked':''} onchange="S.nxQ['${k}']=!S.nxQ['${k}'];save()"><span style="font-size:13px;color:var(--tx);line-height:1.5">${q}</span></div>`}).join(''));
+  setHTML('nexus-table',D.nexusStates.map(s=>`<tr><td><strong>${s.state}</strong> <span style="color:var(--txm);font-size:12px">${s.abbr}</span></td><td style="font-family:var(--mono);font-size:12px">${s.sales}</td><td style="font-family:var(--mono);font-size:12px">${s.txns}</td><td style="font-family:var(--mono)">${s.rate}</td><td style="font-size:12px;color:var(--txm)">${s.note}</td></tr>`).join(''));
+}
+function updateNexusClient(){
+  S.nxClient=$('nx-client').value;
+  const detail=$('nx-client-detail');
+  if(!S.nxClient){detail.style.display='none';return;}
+  detail.style.display='block';
+  const cl=D.clients.find(c=>c.id===S.nxClient);
+  $('nx-status-msg').textContent=`${cl.name} operates in ${cl.states.length} state${cl.states.length>1?'s':''}: ${cl.states.join(', ')}. ${cl.states.length>1?'Multi-state nexus review recommended annually.':'Single-state client — monitor economic thresholds.'}`;
+  setHTML('nx-state-checklist',`<div style="font-size:12px;font-weight:500;color:var(--txm);margin-bottom:8px">Registration status by state</div>`+D.nexusStates.map(s=>{const key=S.nxClient+'_'+s.abbr;const inState=cl.states.includes(s.abbr);const status=S.nxStates[key]||'unknown';return`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)"><span style="font-size:13px;flex:1;color:var(--tx)">${s.state}</span>${inState?'<span class="bdg br">Active state</span>':''}<select style="width:auto;padding:3px 8px;font-size:12px" onchange="S.nxStates['${key}']=this.value;save()"><option value="unknown" ${status==='unknown'?'selected':''}>Not assessed</option><option value="registered" ${status==='registered'?'selected':''}>Registered</option><option value="monitoring" ${status==='monitoring'?'selected':''}>Monitoring</option><option value="nexus" ${status==='nexus'?'selected':''}>Nexus — not registered</option></select></div>`}).join(''));
+}
+
+// ─── BENCHMARKS ───────────────────────────────────────────────────────────────
+function renderBenchmarks(){
+  const ind=$('bmk-industry').value;
+  const bmk=D.benchmarks[ind];
+  if(!S.bmkValues[ind])S.bmkValues[ind]={};
+  setHTML('bmk-inputs',bmk.metrics.map((m,i)=>{const val=S.bmkValues[ind][i]!==undefined?S.bmkValues[ind][i]:m.bench;return`<div class="fr"><label>${m.name} (${m.unit}) <span style="font-weight:300;color:var(--txh)">— benchmark: ${m.fmt==='cur'?fmt$(m.bench):m.bench+m.unit}</span></label><input type="number" value="${val}" step="${m.fmt==='cur'?1000:m.fmt==='pct'?0.1:0.1}" oninput="S.bmkValues['${ind}'][${i}]=parseFloat(this.value)||0;save();renderBenchmarkChart()" placeholder="${m.bench}"></div>`}).join(''));
+  renderBenchmarkChart();
+}
+function renderBenchmarkChart(){
+  const ind=$('bmk-industry').value;
+  const bmk=D.benchmarks[ind];
+  if(!S.bmkValues[ind])S.bmkValues[ind]={};
+  setHTML('bmk-chart',bmk.metrics.map((m,i)=>{
+    const client=S.bmkValues[ind][i]!==undefined?S.bmkValues[ind][i]:m.bench;
+    const bench=m.bench;
+    const good=m.good==='higher'?(client>=bench):(client<=bench);
+    const clientBar=m.fmt==='cur'?Math.min(100,Math.round(client/bench*70)):Math.min(100,Math.round(client/Math.max(client,bench)*100));
+    const benchBar=m.fmt==='cur'?70:Math.round(bench/Math.max(client,bench)*100);
+    const fmtVal=v=>m.fmt==='cur'?'$'+Number(v).toLocaleString():m.fmt==='pct'?v+'%':v+' '+m.unit;
+    return`<div class="kpi-row"><div class="kpi-name">${m.name}<div style="font-size:11px;color:var(--txh)">${m.note}</div></div><div style="flex:1"><div style="display:flex;gap:4px;margin-bottom:3px"><div style="height:7px;border-radius:4px;flex:${clientBar};background:${good?'var(--acc)':'#f59e0b'}"></div><div style="height:7px;flex:${100-clientBar}"></div></div><div style="display:flex;gap:4px"><div style="height:4px;border-radius:4px;flex:${benchBar};background:var(--bdr2)"></div><div style="height:4px;flex:${100-benchBar}"></div></div></div><div class="kpi-nums"><span class="kpi-client" style="color:${good?'var(--acc)':'#d97706'}">${fmtVal(client)}</span><span class="kpi-bench">${fmtVal(bench)}</span></div></div>`;
+  }).join('')+`<div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:var(--txm)"><span><span style="display:inline-block;width:10px;height:7px;border-radius:2px;background:var(--acc);margin-right:4px"></span>Your client</span><span><span style="display:inline-block;width:10px;height:4px;border-radius:2px;background:var(--bdr2);margin-right:4px"></span>Industry benchmark</span></div>`);
+}
+
+// ─── ADVISORY ────────────────────────────────────────────────────────────────
+function renderAdvisory(){
+  const totalMRR=D.advisoryClients.reduce((a,c)=>a+c.mrr,0);
+  setHTML('adv-metrics',
+    mc('Advisory clients',D.advisoryClients.filter(c=>c.status==='active').length,'Active retainers')+
+    mc('Advisory MRR',fmt$(totalMRR),'Monthly recurring revenue','up')+
+    mc('Pipeline potential',fmt$(D.advisoryPipeline.reduce((a,c)=>a+c.potential,0)),'2 prospects in pipeline')
+  );
+  setHTML('adv-clients',D.advisoryClients.map(c=>`<div style="padding:10px 0;border-bottom:1px solid var(--bdr)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="font-size:14px;font-weight:500">${c.name}</span><span style="font-family:var(--mono);font-size:13px;color:var(--acc)">${fmt$(c.mrr)}/mo</span></div><div style="display:flex;gap:8px;margin-bottom:6px"><span class="bdg bg">${c.tier}</span><span class="bdg bgr">Since ${c.since}</span></div><div>${c.deliverables.map(d=>`<div style="font-size:12px;color:var(--txm);padding:2px 0">• ${d}</div>`).join('')}</div></div>`).join(''));
+  setHTML('adv-pipeline',D.advisoryPipeline.map((p,i)=>`<div style="padding:10px 0;border-bottom:1px solid var(--bdr)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="font-size:14px;font-weight:500">${p.name}</span><div style="display:flex;align-items:center;gap:8px"><span style="font-family:var(--mono);font-size:13px;color:var(--txm)">${fmt$(p.potential)}/mo</span><button onclick="removePipeline(${i})" style="border:none;background:none;cursor:pointer;font-size:11px;color:var(--txh);padding:2px 6px;border-radius:4px;transition:background .12s" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">Remove</button></div></div><span class="bdg ba" style="margin-bottom:6px">${p.stage}</span><div style="font-size:12px;color:var(--txm);margin-top:4px">${p.notes}</div></div>`).join('')+`<div style="margin-top:12px"><button class="btn btnsm" onclick="showAddPipeline()">+ Add prospect</button></div>`);
+  setHTML('adv-tiers',`
+    ${tier('Starter','$500–$750/mo',['Monthly KPI dashboard (5 metrics)','Quarterly review call (45 min)','Annual tax planning session'],'bgr')}
+    ${tier('Growth','$1,000–$1,500/mo',['Everything in Starter','Monthly strategy call (60 min)','Rolling 12-month cash flow forecast','Quarterly benchmarking report'],'bb')}
+    ${tier('Full CFO','$2,000–$3,500/mo',['Everything in Growth','Weekly check-in (30 min)','Board/investor reporting package','Budget vs. actual analysis','Ad-hoc advisory (unlimited email)'],'bg')}
+  `);
+  const deliverables=['Cash flow forecast updated','KPI dashboard delivered','Strategy call completed','Tax planning memo sent','Client follow-up actions documented'];
+  setHTML('adv-checklist',D.advisoryClients.filter(c=>c.status==='active').map(cl=>`<div style="margin-bottom:1rem"><div style="font-size:13px;font-weight:500;margin-bottom:8px">${cl.name}</div>${deliverables.map((d,i)=>{const k=cl.name.replace(/[^a-zA-Z0-9]/g,'_')+'_'+i;return`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid var(--bdr)"><input type="checkbox" ${S.advChecklist[k]?'checked':''} onchange="S.advChecklist[${JSON.stringify(k)}]=!S.advChecklist[${JSON.stringify(k)}];save()"><span style="font-size:13px;${S.advChecklist[k]?'text-decoration:line-through;color:var(--txh)':'color:var(--tx)'}">${d}</span></div>`}).join('')}</div>`).join(''));
+}
+function tier(name,price,items,badge){return`<div style="border:1px solid var(--bdr);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:500">${name}</span><span class="bdg ${badge}">${price}</span></div>${items.map(i=>`<div style="font-size:12px;color:var(--txm);padding:2px 0">• ${i}</div>`).join('')}</div>`}
+
+function removePipeline(i){D.advisoryPipeline.splice(i,1);renderAdvisory();}
+function showAddPipeline(){
+  if($('add-pipe-form')){$('add-pipe-form').remove();return;}
+  const wrap=document.createElement('div');
+  wrap.id='add-pipe-form';
+  wrap.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem';
+  wrap.innerHTML=`<div style="background:var(--sur);border:1px solid var(--bdr2);border-radius:var(--r);padding:1.5rem;width:100%;max-width:400px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem"><div style="font-size:15px;font-weight:500">Add advisory prospect</div><button onclick="document.getElementById('add-pipe-form').remove()" style="border:none;background:none;cursor:pointer;font-size:18px;color:var(--txh)">×</button></div><div class="fr"><label>Client name</label><input type="text" id="pp-name" placeholder="e.g. TechFlow Solutions"></div><div class="fr"><label>Stage</label><select id="pp-stage"><option>Interested</option><option>Proposal sent</option><option>Negotiating</option><option>Won</option></select></div><div class="fr"><label>Monthly potential ($)</label><input type="number" id="pp-potential" placeholder="750"></div><div class="fr"><label>Notes</label><textarea id="pp-notes" placeholder="Next steps, context..." style="height:70px"></textarea></div><div style="display:flex;gap:10px;margin-top:1rem"><button class="btn btnp" onclick="submitPipeline()" style="flex:1">Add prospect</button><button class="btn" onclick="document.getElementById('add-pipe-form').remove()">Cancel</button></div></div>`;
+  document.body.appendChild(wrap);
+  wrap.addEventListener('click',e=>{if(e.target===wrap)wrap.remove();});
+}
+function submitPipeline(){
+  const name=$('pp-name')&&$('pp-name').value.trim();
+  if(!name)return;
+  D.advisoryPipeline.push({name,stage:$('pp-stage').value,potential:parseInt($('pp-potential').value)||500,notes:$('pp-notes').value||'No notes'});
+  $('add-pipe-form').remove();
+  renderAdvisory();
+}
+// ─── PAGE MAP ─────────────────────────────────────────────────────────────────
+const PAGES={
+  dashboard:renderDashboard,
+  clients:renderClients,
+  workflows:renderWorkflows,
+  reminders:renderReminders,
+  reports:()=>{buildReport();},
+  taxplanning:()=>{buildTaxMemo();},
+  sops:renderSOPs,
+  nexus:renderNexus,
+  benchmarks:renderBenchmarks,
+  advisory:renderAdvisory
+};
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+renderDashboard();
+</script>
+</body>
+</html>
