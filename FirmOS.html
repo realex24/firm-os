@@ -778,7 +778,7 @@ try{
   const savedClients=localStorage.getItem('firmOS_clients');
   if(savedClients){
     const sc=JSON.parse(savedClients);
-    if(sc.clients&&sc.clients.length>0)D.clients=sc.clients;
+    if(sc.clients&&Array.isArray(sc.clients)&&sc.clients.length>0){D.clients=sc.clients;console.log('Loaded',sc.clients.length,'clients from localStorage');}
     if(sc.advisoryClients&&sc.advisoryClients.length>0)D.advisoryClients=sc.advisoryClients;
     if(sc.advisoryPipeline)D.advisoryPipeline=sc.advisoryPipeline;
   }
@@ -787,10 +787,12 @@ try{
 function save(){
   try{
     localStorage.setItem('firmOS_state',JSON.stringify({tasks:S.tasks,onboardProgress:S.onboardProgress,nxStates:S.nxStates,nxQ:S.nxQ,advChecklist:S.advChecklist,bmkValues:S.bmkValues}));
-    localStorage.setItem('firmOS_clients',JSON.stringify({clients:D.clients,advisoryClients:D.advisoryClients,advisoryPipeline:D.advisoryPipeline,workflows:Object.keys(D.workflows).map(k=>({key:k,label:D.workflows[k].label,phases:D.workflows[k].phases.map(p=>({label:p.label,window:p.window,total:p.tasks.length,done:p.tasks.filter((_,ti)=>S.tasks[k+'_'+Object.keys(D.workflows).indexOf(k)+'_'+ti]).length}))})),savedAt:new Date().toISOString()}));
+  }catch(e){console.warn('State save failed',e);}
+  try{
+    localStorage.setItem('firmOS_clients',JSON.stringify({clients:D.clients,advisoryClients:D.advisoryClients,advisoryPipeline:D.advisoryPipeline,savedAt:new Date().toISOString()}));
     const ind=document.getElementById('save-indicator');
     if(ind){ind.textContent='Saved';ind.style.color='#4ade80';setTimeout(()=>{ind.textContent='Auto-save on';ind.style.color='rgba(255,255,255,.25)';},1500);}
-  }catch(e){}
+  }catch(e){console.warn('Client save failed',e);}
 }
 
 // ─── ROUTER ───────────────────────────────────────────────────────────────────
